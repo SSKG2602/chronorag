@@ -7,8 +7,8 @@ reranker:
 llm:
   strategy_order: ["local_hf", "openai_compat"]
   local_hf:
-    model_path: models_bin/phi3-mini-instruct
-    dtype: bfloat16   # use float32 if your hardware lacks bfloat16
+    model_path: models_bin/qwen-0_5-chat
+    dtype: float16   # use float32 if your hardware lacks float16 support
     device_map: auto
     max_new_tokens: 512
     temperature: 0.15

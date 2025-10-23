@@ -12,6 +12,7 @@ from __future__ import annotations
 import datetime as dt
 import json
 import math
+import os
 import re
 import time
 from pathlib import Path
@@ -94,6 +95,11 @@ UNIT_PATTERNS: Dict[str, Tuple[re.Pattern, ...]] = {
 }
 
 GPU_BATCHING_ENABLED = bool(torch and torch.cuda.is_available())
+if os.environ.get("KAGGLE_KERNEL_RUN_TYPE"):
+    os.environ.setdefault("SENTENCE_TRANSFORMERS_HOME", "/kaggle/working/.cache")
+    os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+    if torch and torch.cuda.is_available():
+        os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
 
 
 def _iter_batches(items: List[str]) -> Iterable[List[str]]:

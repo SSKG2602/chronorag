@@ -1,51 +1,137 @@
-# TimeGuard ChronoRAG (Research Scaffold)
+# TimeGuard ChronoRAG
 
-ChronoRAG is a research-grade, repo-grade scaffold for building a temporal-safe retrieval augmented generation (RAG) system. It implements a lightweight yet complete ingest → retrieve → answer pipeline with ChronoGuard controls, designed to run on free Colab T4 instances and M-series Macs with ~7 GB GPU VRAM.
+TimeGuard ChronoRAG is a research-grade retrieval-augmented generation (RAG)
+stack designed for time-sensitive knowledge bases. The scaffold emphasizes
+deterministic temporality, auditable provenance, and modular experimentation
+with retrieval and large language models (LLMs). ChronoGuard policies enforce
+temporal compliance from ingest through answer synthesis, enabling analysts to
+trace every statement back to overlapping validity windows.
 
-## Quickstart
+## Architecture Overview
 
-### Local (macOS / WSL)
-```bash
-bash scripts/setup_dev.sh
-bash scripts/run_api.sh
-# in a new terminal
-python -m cli.chronorag_cli ingest data/sample/docs
-python -m cli.chronorag_cli answer --query "Who is the CEO today?" --mode HARD
-```
-FastAPI serves at http://127.0.0.1:8000 with `/healthz`, `/ingest`, `/retrieve`, `/answer`, `/policy`, `/incident` endpoints.
+ChronoRAG is organized as a service-oriented Python 3.11 application:
 
-> Tip: The repository enables `CHRONORAG_LIGHT=1` in `pytest.ini` so tests run with lightweight stubs instead of downloading large models. Disable it (`export CHRONORAG_LIGHT=0`) when you want full model execution.
+- **API layer** (`app/`): FastAPI endpoints exposed by `uvicorn_runner`,
+  dependency-injection helpers (`deps.py`), and orchestration services.
+- **Core pipeline** (`core/`): Retrieval heuristics, fusion strategies,
+  generator utilities, and LLM backends.
+- **Storage layer** (`storage/`): Persistent vector database (PVDB) adapters,
+  Postgres/pgvector schemas, and ORM models.
+- **CLI tooling** (`cli/`): Operational workflows for ingesting corpora,
+  issuing queries, and performing smoke tests.
+- **Configuration** (`config/` + `environment.yml`): Model selection, policy
+  tuning, and environment pinning.
+- **Notebooks & scripts** (`notebooks/`, `scripts/`): Colab integration,
+  lightweight benchmarking, and developer automation.
 
-### Colab
-1. Open `notebooks/ChronoRAG_Colab.ipynb`.
-2. Run all cells — it installs deps, spins up the API, ingests samples, and issues a smoke `/answer` call.
+The system operates on three pillars—**ingest**, **retrieve**, and **answer**—
+with ChronoGuard controls gating each phase.
 
-## Hardware & Models
-- Runs on CPU by default; optional GPU acceleration when available.
-- Embeddings: `bge-base-en-v1.5` (CPU/GPU via sentence-transformers) with in-repo fallback stub.
-- Reranker: `bge-reranker-base` cross-encoder (batch ≤16, CPU-friendly fallback).
-- LLM Answerer: defaults to local HuggingFace `microsoft/Phi-3-mini-4k-instruct` with OpenAI-compatible fallback (see `config/models.yaml`).
-- Python 3.11 preferred; if you remain on Python 3.9 (e.g., Anaconda base), leave LIGHT mode enabled to avoid incompatible binary wheels.
-- Optional LLM Judge reranker is available (light-mode heuristic when stubs active); toggle via `config/models.yaml`.
-- ChronoSanity Gate enforces overlap blocks (`chronosanity.overlap_threshold`), returning evidence-only cards when conflicts trigger.
+## Data Flow
 
-### Switching LLM Backends
-1. **Local HuggingFace (default)**: the loader now accepts remote repo IDs. Accept the license for `microsoft/Phi-3-mini-4k-instruct` on Hugging Face, export `HF_HOME` if you need a custom cache path, and the weights will download on first run. Set `HF_TOKEN` if the repo is gated. On Kaggle P100/T4 runtimes install `bitsandbytes` for optional 4-bit loading and ensure the GPU is selected (`torch.cuda.is_available()`).
-2. **OpenAI-compatible**: export `LLM_ENDPOINT` and `LLM_API_KEY` to point at a v1 `/chat/completions` endpoint.
-3. **llama.cpp**: drop a GGUF file into `models_bin/gguf/` matching the config path; the loader auto-switches when the file exists.
-4. **Ollama**: run `ollama serve` locally; the loader will call `http://localhost:11434` when higher-priority options are unavailable.
+1. **Ingest**  
+   Documents arrive through the CLI or API and are chunked, normalized, and
+   written to PVDB with temporal metadata (valid window, transaction window,
+   authority, units, region). Chrono fingerprints prevent drift between updates.
 
-> Kaggle GPU tip: enable the T4/P100 accelerator, `pip install bitsandbytes`, run `huggingface-cli login --token $HF_TOKEN`, then launch `python -m app.uvicorn_runner`. The first invocation downloads the Phi-3 Mini weights into the Kaggle working directory. If the LLM backend is unreachable, the API now returns a deterministic evidence digest instead of truncating the answer.
+2. **Retrieve**  
+   The hybrid retrieval service fans out across BM25 lexical search, ANN
+   embeddings, and temporal filters before reranking with a cross-encoder and
+   optional LLM judge. Monotone temporal fusion ensures relevance never improves
+   when time compliance worsens.
 
-## Smoke Tests
-- `curl http://127.0.0.1:8000/healthz`
-- `python -m cli.chronorag_cli retrieve --query "Q2 revenue" --mode INTELLIGENT`
-- `pytest -q`
-- Admin policy change: `curl -XPOST http://127.0.0.1:8000/policy/apply -H 'Authorization: Bearer chronorag-admin' -H 'Content-Type: application/json' -d '{"policy_version":"v1.1.2","changes":{"chronosanity":{"overlap_threshold":0.7}},"idempotency_key":"demo"}'`
+3. **Answer**  
+   The generator fuses ChronoPassages into a structured prompt, selects an LLM
+   backend (local Hugging Face, llama.cpp, Ollama, or OpenAI-compatible), and
+   renders an attribution card. When models fail or evidence conflicts,
+   deterministic fallbacks provide evidence-only digests.
 
-## Design Choices
-- **Temporal Pre-mask**: all recall candidates are filtered against the requested time window (HARD) or decayed (INTELLIGENT) before reranking.
-- **Monotone Time-safe Fusion**: final passage scores never improve when time compliance worsens, ensuring temporal monotonicity.
-- **ChronoCards**: answers return structured attribution cards with windows, authority ladder info, confidence bands, and counterfactual scaffolds.
+## Key Components
 
-Refer to `chronorag.md` for the full specification that this scaffold implements.
+- `app/services/ingest_service.py`  
+  Handles ingestion pipelines, chunking, and metadata enrichment. Supports
+  authoritative source tagging and Chrono fingerprinting.
+
+- `app/services/retrieve_service.py`  
+  Orchestrates hybrid retrieval with domain-aware weight profiles, time
+  filtering, and ranking via cross-encoder/LLM judge. Emits observability
+  metadata (coverage, fan-out, hop execution count).
+
+- `app/services/answer_service.py`  
+  Runs ChronoGuard controller planning, conflict detection, and answer
+  generation. Tracks planned vs. executed hops, ChronoSanity degradation, and
+  attribution assembly.
+
+- `core/generator/*`  
+  Provides prompts, backend loaders, and structured fallbacks. Supports remote
+  Hugging Face models, 4-bit loading hints, and deterministic generation with
+  stop tokens.
+
+- `core/dhqc/*`  
+  Implements the Domain Heuristic Query Controller (DHQC) for hop planning and
+  candidate budgets based on coverage signals.
+
+- `storage/pvdb/*`  
+  Defines data access objects and models for the Postgres + pgvector backing
+  store, including entity/unit extraction and temporal filters.
+
+## Temporal Safety & ChronoGuard
+
+- **Temporal pre-mask** trims candidates outside the requested window before
+  reranking.
+- **Monotone temporal fusion** penalizes misaligned evidence so time-respecting
+  passages dominate the final ranking.
+- **ChronoSanity** detects overlapping claims and can degrade responses to
+  evidence-only outputs when conflicts exceed configurable thresholds.
+- **Attribution cards** embed source URIs, windows, authority scores, and
+  counterfactual timelines to explain conflicting evidence.
+
+## Model Strategy
+
+`config/models.yaml` describes the ensemble:
+
+- Embeddings default to `BAAI/bge-base-en-v1.5`.
+- Reranking uses `BAAI/bge-reranker-v2-m3` with fallback cross-encoders.
+- LLM strategy prioritizes local Hugging Face models (Phi-3 Mini by default),
+  then OpenAI-compatible endpoints. Optional llama.cpp and Ollama backends are
+  autodetected when binaries/models are present.
+- Prompt limits cap per-pass passage counts and snippet sizes to keep context
+  within GPU memory constraints while preserving determinism.
+
+## Policy & Configuration
+
+- `config/policy.yaml` (and related policy sets) control authority weighting,
+  ChronoSanity overlap thresholds, and domain-specific fusion parameters.
+- `config/models.yaml` toggles model backends, prompt limits, and generation
+  temperatures (default 0.0 for repeatability).
+- Environment variables:
+  - `HF_TOKEN` for gated Hugging Face downloads.
+  - `LLM_ENDPOINT` / `LLM_API_KEY` for OpenAI-compatible providers.
+  - `CHRONORAG_LIGHT` to switch between stubbed light mode and full models.
+
+## Observability & Telemetry
+
+- `controller_stats` emitted by the API exposes hop plans (planned vs executed),
+  coverage signals, latency, token counts, and degradation reasons.
+- `audit_trail` records ChronoSanity conflict traces and policy overrides.
+- Logging surfaces backend failures, fallback activations, and prompt trimming.
+
+## Extensibility Roadmap
+
+- Swap embeddings or rerankers by editing `config/models.yaml`.
+- Add new temporal policies or domains by extending `policy_sets`.
+- Integrate additional backends (e.g., custom inference endpoints) by
+  subclassing `LLMBackend` in `core/generator/llm_loader.py`.
+- Implement multi-hop retrieval plans by re-invoking `retrieve` when
+  `hop_shortfall` is detected in controller statistics.
+
+## Running ChronoRAG
+
+Operational setup, environment preparation, CLI workflows, and testing commands
+are documented in [`howtorunme.md`](howtorunme.md). Refer to that guide for
+platform-specific instructions (macOS, Linux, Kaggle, Colab).
+
+## License
+
+ChronoRAG inherits its licensing from the original repo. See `LICENSE` for full
+terms and attribution requirements.

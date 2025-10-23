@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+""" import sys uncomment while running in collab"""
 import os
 from dataclasses import dataclass, field
 from functools import lru_cache
@@ -103,3 +104,8 @@ def get_reranker() -> CEReranker:
 
 def get_cache() -> CacheClient:
     return get_app_state().cache
+
+
+"""ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))""" """ uncomment while running in collab"""

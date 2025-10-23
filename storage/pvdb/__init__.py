@@ -1,1 +1,1 @@
-# Package marker for storage.pvdb.
+"""Package marker for storage.pvdb namespace."""

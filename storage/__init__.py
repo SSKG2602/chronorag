@@ -1,1 +1,1 @@
-# Makes `storage` importable as a package.
+"""Package marker for storage namespace."""

@@ -9,7 +9,7 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from app.utils.time_windows import TimeWindow, hard_mode_pre_mask, intelligent_decay
 from core.retrieval.vector_ann import InMemoryANNIndex
-from storage.pvdb.models import ChunkRecord, DocumentRecord
+from .models import ChunkRecord, DocumentRecord
 
 
 class PVDB:

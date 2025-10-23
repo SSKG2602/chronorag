@@ -11,6 +11,7 @@ llm:
     allow_remote: true
     dtype: float16   # set to float32 for CPU-only environments
     device_map: auto
+    token_env: HF_TOKEN  # set this env var if the repo requires gated access
     max_new_tokens: 512
     temperature: 0.0
     stop: ["<|ATTR_CARD|>"]

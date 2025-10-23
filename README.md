@@ -30,12 +30,12 @@ FastAPI serves at http://127.0.0.1:8000 with `/healthz`, `/ingest`, `/retrieve`,
 - ChronoSanity Gate enforces overlap blocks (`chronosanity.overlap_threshold`), returning evidence-only cards when conflicts trigger.
 
 ### Switching LLM Backends
-1. **Local HuggingFace (default)**: the loader now accepts remote repo IDs. Accept the license for `microsoft/Phi-3-mini-4k-instruct` on Hugging Face, export `HF_HOME` if you need a custom cache path, and the weights will download on first run. On Kaggle P100/T4 runtimes install `bitsandbytes` for optional 4-bit loading and ensure the GPU is selected (`torch.cuda.is_available()`).
+1. **Local HuggingFace (default)**: the loader now accepts remote repo IDs. Accept the license for `microsoft/Phi-3-mini-4k-instruct` on Hugging Face, export `HF_HOME` if you need a custom cache path, and the weights will download on first run. Set `HF_TOKEN` if the repo is gated. On Kaggle P100/T4 runtimes install `bitsandbytes` for optional 4-bit loading and ensure the GPU is selected (`torch.cuda.is_available()`).
 2. **OpenAI-compatible**: export `LLM_ENDPOINT` and `LLM_API_KEY` to point at a v1 `/chat/completions` endpoint.
 3. **llama.cpp**: drop a GGUF file into `models_bin/gguf/` matching the config path; the loader auto-switches when the file exists.
 4. **Ollama**: run `ollama serve` locally; the loader will call `http://localhost:11434` when higher-priority options are unavailable.
 
-> Kaggle GPU tip: enable the T4/P100 accelerator, `pip install bitsandbytes`, run `huggingface-cli login --token $HF_TOKEN`, then launch `python -m app.uvicorn_runner`. The first invocation downloads the Phi-3 Mini weights into the Kaggle working directory.
+> Kaggle GPU tip: enable the T4/P100 accelerator, `pip install bitsandbytes`, run `huggingface-cli login --token $HF_TOKEN`, then launch `python -m app.uvicorn_runner`. The first invocation downloads the Phi-3 Mini weights into the Kaggle working directory. If the LLM backend is unreachable, the API now returns a deterministic evidence digest instead of truncating the answer.
 
 ## Smoke Tests
 - `curl http://127.0.0.1:8000/healthz`

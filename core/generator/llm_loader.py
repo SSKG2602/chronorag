@@ -96,6 +96,7 @@ class LocalHFBackend:
         load_in_4bit: bool = False,
         bnb_4bit_compute_dtype: Optional[str] = None,
         trust_remote_code: bool = True,
+        token_env: Optional[str] = None,
     ):
         os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
         from transformers import AutoModelForCausalLM, AutoTokenizer  # type: ignore[import]
@@ -105,7 +106,19 @@ class LocalHFBackend:
             torch_dtype = getattr(torch, dtype)
         else:
             torch_dtype = torch.bfloat16 if torch.cuda.is_available() else torch.float32
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=trust_remote_code)
+        hf_token = None
+        if token_env:
+            candidate = os.getenv(token_env)
+            if candidate:
+                hf_token = candidate
+        token_kwargs = {}
+        if hf_token:
+            token_kwargs = {"token": hf_token, "use_auth_token": hf_token}
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            model_path,
+            trust_remote_code=trust_remote_code,
+            **token_kwargs,
+        )
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
         model_kwargs = {
@@ -127,6 +140,7 @@ class LocalHFBackend:
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_path,
                 **model_kwargs,
+                **token_kwargs,
             )
         except Exception:
             if load_in_4bit:
@@ -137,6 +151,7 @@ class LocalHFBackend:
                 self.model = AutoModelForCausalLM.from_pretrained(
                     model_path,
                     **model_kwargs,
+                    **token_kwargs,
                 )
             else:
                 raise
@@ -189,6 +204,7 @@ def load_backend(cfg) -> tuple[LLMBackend, str]:
                         entry.get("load_in_4bit", False),
                         entry.get("bnb_4bit_compute_dtype"),
                         entry.get("trust_remote_code", True),
+                        entry.get("token_env"),
                     )
                     return backend, "local_hf"
             elif name == "llama_cpp":

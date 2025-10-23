@@ -20,15 +20,29 @@ from core.generator.prompts import build_messages
 STOP_MARKER = "<|ATTR_CARD|>"
 
 
+def _format_passage_line(idx: int, passage: ChronoPassage) -> str:
+    text = passage.text.strip().replace("\n", " ")
+    if len(text) > 220:
+        text = text[:220].rsplit(" ", 1)[0] + "…"
+    window = f"{passage.valid_window.start.date()} → {passage.valid_window.end.date()}"
+    source = passage.uri
+    return f"{idx}. {text} (Window: {window}; Source: {source})"
+
+
 def _fallback_response(query: str, evidence: List[ChronoPassage]) -> str:
     """Return a deterministic message when no LLM backend is reachable."""
     top = evidence[0] if evidence else None
     if not top:
-        return f"No direct in-window evidence found for: {query}" + STOP_MARKER
-    return (
-        f"Based on authoritative evidence, {top.text.strip()}"[:500]
-        + "\n\n<|ATTR_CARD|>"
-    )
+        return f"No direct in-window evidence found for: {query}\n\n{STOP_MARKER}"
+    lines = [
+        "ChronoGuard fallback mode — unable to reach the language model, supplying evidence digest.",
+        f"Query: {query}",
+        "Key evidence:",
+    ]
+    for idx, passage in enumerate(evidence[:5], 1):
+        lines.append(_format_passage_line(idx, passage))
+    lines.append("Use the cited passages to construct the final narrative.")
+    return "\n".join(lines) + "\n\n" + STOP_MARKER
 
 
 def generate_answer(
@@ -72,8 +86,12 @@ def generate_answer(
             max_tokens = entry.get("max_tokens", max_tokens)
             temperature = entry.get("temperature", temperature)
         raw = backend.generate(messages, max_tokens=max_tokens, temperature=temperature, stop=stop_list)
+        if not raw or not raw.strip():
+            raw = _fallback_response(query, evidence)
     except Exception:
         raw = _fallback_response(query, evidence)
     clipped = raw.split(STOP_MARKER)[0].strip()
+    if len(clipped) < 40 and evidence:
+        clipped = _fallback_response(query, evidence).split(STOP_MARKER)[0].strip()
     token_estimate = max(1, len(clipped.split()))
     return clipped, token_estimate

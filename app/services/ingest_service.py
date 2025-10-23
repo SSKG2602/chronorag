@@ -11,10 +11,16 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import math
 import re
 import time
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Tuple
+
+try:  # pragma: no cover - optional dependency
+    import torch
+except Exception:  # pragma: no cover
+    torch = None
 
 from app.deps import get_cache, get_policy_cfg, get_pvdb
 from app.utils.time_windows import TimeWindow, make_window, parse_date
@@ -87,6 +93,20 @@ UNIT_PATTERNS: Dict[str, Tuple[re.Pattern, ...]] = {
     ),
 }
 
+GPU_BATCHING_ENABLED = bool(torch and torch.cuda.is_available())
+
+
+def _iter_batches(items: List[str]) -> Iterable[List[str]]:
+    """Yield items in up to four batches when CUDA is available; otherwise a single batch."""
+    if not GPU_BATCHING_ENABLED or len(items) <= 1:
+        if items:
+            yield items
+        return
+    desired_batches = min(4, len(items))
+    chunk_size = max(1, math.ceil(len(items) / desired_batches))
+    for idx in range(0, len(items), chunk_size):
+        yield items[idx : idx + chunk_size]
+
 
 def ingest(paths: List[str], text_blobs: List[str], provenance: str | None = None) -> List[str]:
     """Entry-point for CLI/API ingestion commands."""
@@ -96,18 +116,22 @@ def ingest(paths: List[str], text_blobs: List[str], provenance: str | None = Non
 
     # Ingest every file path.  Non-existent files are silently skipped so that
     # bulk commands remain resilient to missing resources.
-    for item in paths:
-        path = Path(item)
-        if not path.exists():
-            continue
-        text = path.read_text(encoding="utf-8")
-        uri = provenance or path.name
-        ingested_ids.extend(_process_payload(text, uri, pvdb, policy))
+    for batch in _iter_batches(paths):
+        for item in batch:
+            path = Path(item)
+            if not path.exists():
+                continue
+            text = path.read_text(encoding="utf-8")
+            uri = provenance or path.name
+            ingested_ids.extend(_process_payload(text, uri, pvdb, policy))
 
     # Inline text blobs (e.g., pasted snippets) are treated like individual documents.
-    for idx, text in enumerate(text_blobs):
-        uri = provenance or f"inline:{idx}"
-        ingested_ids.extend(_process_payload(text, uri, pvdb, policy))
+    offset = 0
+    for batch in _iter_batches(text_blobs):
+        for text in batch:
+            uri = provenance or f"inline:{offset}"
+            ingested_ids.extend(_process_payload(text, uri, pvdb, policy))
+            offset += 1
 
     # Flush disk persistence once per ingest batch to amortise I/O.
     pvdb.flush()

@@ -24,15 +24,18 @@ FastAPI serves at http://127.0.0.1:8000 with `/healthz`, `/ingest`, `/retrieve`,
 - Runs on CPU by default; optional GPU acceleration when available.
 - Embeddings: `bge-base-en-v1.5` (CPU/GPU via sentence-transformers) with in-repo fallback stub.
 - Reranker: `bge-reranker-base` cross-encoder (batch ≤16, CPU-friendly fallback).
-- LLM Answerer: strategy order `OpenAI-compatible → llama.cpp → Ollama`, configured in `config/models.yaml`.
+- LLM Answerer: defaults to local HuggingFace `microsoft/Phi-3-mini-4k-instruct` with OpenAI-compatible fallback (see `config/models.yaml`).
 - Python 3.11 preferred; if you remain on Python 3.9 (e.g., Anaconda base), leave LIGHT mode enabled to avoid incompatible binary wheels.
 - Optional LLM Judge reranker is available (light-mode heuristic when stubs active); toggle via `config/models.yaml`.
 - ChronoSanity Gate enforces overlap blocks (`chronosanity.overlap_threshold`), returning evidence-only cards when conflicts trigger.
 
 ### Switching LLM Backends
-1. **OpenAI-compatible**: export `LLM_ENDPOINT` and `LLM_API_KEY` to point at a v1 `/chat/completions` endpoint.
-2. **llama.cpp**: drop a GGUF file into `models_bin/gguf/` matching the config path; the loader auto-switches when the file exists.
-3. **Ollama**: run `ollama serve` locally; the loader will call `http://localhost:11434` when higher-priority options are unavailable.
+1. **Local HuggingFace (default)**: the loader now accepts remote repo IDs. Accept the license for `microsoft/Phi-3-mini-4k-instruct` on Hugging Face, export `HF_HOME` if you need a custom cache path, and the weights will download on first run. On Kaggle P100/T4 runtimes install `bitsandbytes` for optional 4-bit loading and ensure the GPU is selected (`torch.cuda.is_available()`).
+2. **OpenAI-compatible**: export `LLM_ENDPOINT` and `LLM_API_KEY` to point at a v1 `/chat/completions` endpoint.
+3. **llama.cpp**: drop a GGUF file into `models_bin/gguf/` matching the config path; the loader auto-switches when the file exists.
+4. **Ollama**: run `ollama serve` locally; the loader will call `http://localhost:11434` when higher-priority options are unavailable.
+
+> Kaggle GPU tip: enable the T4/P100 accelerator, `pip install bitsandbytes`, run `huggingface-cli login --token $HF_TOKEN`, then launch `python -m app.uvicorn_runner`. The first invocation downloads the Phi-3 Mini weights into the Kaggle working directory.
 
 ## Smoke Tests
 - `curl http://127.0.0.1:8000/healthz`

@@ -7,16 +7,17 @@ reranker:
 llm:
   strategy_order: ["local_hf", "openai_compat"]
   local_hf:
-    model_path: models_bin/qwen-0_5-chat
-    dtype: float16   # use float32 if your hardware lacks float16 support
+    model_path: microsoft/Phi-3-mini-4k-instruct
+    allow_remote: true
+    dtype: float16   # set to float32 for CPU-only environments
     device_map: auto
     max_new_tokens: 512
-    temperature: 0.15
+    temperature: 0.0
     stop: ["<|ATTR_CARD|>"]
   openai_compat:
     endpoint_env: LLM_ENDPOINT
     api_key_env: LLM_API_KEY
-    model: "microsoft/Phi-3-mini-128k-instruct"
+    model: "microsoft/Phi-3-mini-4k-instruct"
     max_tokens: 900
-    temperature: 0.15
+    temperature: 0.0
     stop: ["<|ATTR_CARD|>"]

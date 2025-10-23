@@ -88,7 +88,15 @@ class OllamaBackend:
 
 
 class LocalHFBackend:
-    def __init__(self, model_path: str, dtype: str = "bfloat16", device_map: Optional[str] = "auto"):
+    def __init__(
+        self,
+        model_path: str,
+        dtype: str = "bfloat16",
+        device_map: Optional[str] = "auto",
+        load_in_4bit: bool = False,
+        bnb_4bit_compute_dtype: Optional[str] = None,
+        trust_remote_code: bool = True,
+    ):
         os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
         from transformers import AutoModelForCausalLM, AutoTokenizer  # type: ignore[import]
         import torch
@@ -97,15 +105,41 @@ class LocalHFBackend:
             torch_dtype = getattr(torch, dtype)
         else:
             torch_dtype = torch.bfloat16 if torch.cuda.is_available() else torch.float32
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=trust_remote_code)
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
-        self.model = AutoModelForCausalLM.from_pretrained(
-            model_path,
-            torch_dtype=torch_dtype,
-            device_map=device_map,
-            trust_remote_code=True,
-        )
+        model_kwargs = {
+            "device_map": device_map,
+            "trust_remote_code": trust_remote_code,
+        }
+        if load_in_4bit:
+            compute_dtype = bnb_4bit_compute_dtype or ("float16" if torch.cuda.is_available() else "float32")
+            compute_attr = getattr(torch, compute_dtype, torch.float16)
+            model_kwargs.update(
+                {
+                    "load_in_4bit": True,
+                    "bnb_4bit_compute_dtype": compute_attr,
+                }
+            )
+        else:
+            model_kwargs["torch_dtype"] = torch_dtype
+        try:
+            self.model = AutoModelForCausalLM.from_pretrained(
+                model_path,
+                **model_kwargs,
+            )
+        except Exception:
+            if load_in_4bit:
+                # Fallback to standard precision when 4-bit loading is unavailable.
+                model_kwargs.pop("load_in_4bit", None)
+                model_kwargs.pop("bnb_4bit_compute_dtype", None)
+                model_kwargs["torch_dtype"] = torch_dtype
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model_path,
+                    **model_kwargs,
+                )
+            else:
+                raise
 
     def generate(self, messages, max_tokens, temperature, stop=None) -> str:
         import torch
@@ -145,12 +179,16 @@ def load_backend(cfg) -> tuple[LLMBackend, str]:
                     return OpenAICompat(endpoint, api_key, entry["model"]), "openai_compat"
             elif name == "local_hf":
                 entry = cfg["local_hf"]
-                path = entry["model_path"]
-                if os.path.exists(path):
+                path = entry.get("model_path")
+                allow_remote = entry.get("allow_remote", False)
+                if path and (os.path.exists(path) or allow_remote):
                     backend = LocalHFBackend(
                         path,
                         entry.get("dtype", "bfloat16"),
                         entry.get("device_map", "auto"),
+                        entry.get("load_in_4bit", False),
+                        entry.get("bnb_4bit_compute_dtype"),
+                        entry.get("trust_remote_code", True),
                     )
                     return backend, "local_hf"
             elif name == "llama_cpp":

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 """ import sys uncomment while running in collab"""
 import os
+import warnings
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
@@ -9,6 +10,19 @@ from typing import Dict
 
 import yaml
 from dotenv import load_dotenv
+
+os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
+os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+
+warnings.filterwarnings("ignore", message="`torch_dtype` is deprecated", category=UserWarning)
+warnings.filterwarnings("ignore", message="Valid config keys have changed in V2", category=UserWarning)
+
+try:  # pragma: no cover
+    from transformers.utils import logging as hf_logging  # type: ignore
+
+    hf_logging.set_verbosity_error()
+except Exception:  # pragma: no cover
+    pass
 
 from core.dhqc.controller import DHQCController
 from core.retrieval.reranker_ce import CEReranker

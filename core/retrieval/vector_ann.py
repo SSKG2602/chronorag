@@ -43,7 +43,7 @@ class EmbeddingEncoder:
             vectors = [_hash_embedding(text) for text in texts]
             return np.stack(vectors, axis=0)
         return np.asarray(
-            self._model.encode(texts, normalize_embeddings=True),
+            self._model.encode(texts, normalize_embeddings=True, show_progress_bar=False),
             dtype=np.float32,
         )
 

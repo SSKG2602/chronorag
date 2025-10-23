@@ -38,6 +38,7 @@ def build_user_prompt(
     evidence: List[ChronoPassage],
     domain: str,
     window_kind: str,
+    snippet_chars: int = 180,
 ) -> str:
     """Format a detailed user message capturing mode, axis, window, and evidence."""
     lines = [
@@ -49,11 +50,12 @@ def build_user_prompt(
         units = ", ".join(passage.units) if passage.units else "n/a"
         entities = ", ".join(passage.entities) if passage.entities else "n/a"
         region = passage.region or passage.facets.get("region") or passage.facets.get("domain", "n/a")
+        snippet = passage.text[:snippet_chars]
         lines.append(
             "- [{score:.2f}] {window}: {text} — {uri}".format(
                 score=passage.score,
                 window=f"{passage.valid_window.start.date()} → {passage.valid_window.end.date()}",
-                text=passage.text[:180],
+                text=snippet,
                 uri=passage.uri,
             )
         )
@@ -69,6 +71,7 @@ def build_messages(
     evidence: List[ChronoPassage],
     domain: str,
     window_kind: str,
+    snippet_chars: int = 180,
 ) -> List[dict]:
     """Return the system/user message pair consumed by downstream LLM backends."""
     system_prompt = BASE_SYSTEM_PROMPT
@@ -76,5 +79,17 @@ def build_messages(
         system_prompt = f"{system_prompt} {DOMAIN_NOTES[domain]}"
     return [
         {"role": "system", "content": system_prompt},
-        {"role": "user", "content": build_user_prompt(query, mode, axis, window, evidence, domain, window_kind)},
+        {
+            "role": "user",
+            "content": build_user_prompt(
+                query,
+                mode,
+                axis,
+                window,
+                evidence,
+                domain,
+                window_kind,
+                snippet_chars=snippet_chars,
+            ),
+        },
     ]

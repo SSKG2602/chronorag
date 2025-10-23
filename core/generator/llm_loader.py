@@ -4,6 +4,7 @@ from typing import Protocol, List, Dict, Optional
 import os
 
 import httpx
+import logging
 
 
 class LLMBackend(Protocol):
@@ -15,6 +16,8 @@ class LLMBackend(Protocol):
         stop: Optional[list] = None,
     ) -> str:
         ...
+
+logger = logging.getLogger(__name__)
 
 
 class OpenAICompat:
@@ -148,6 +151,7 @@ class LocalHFBackend:
                 model_kwargs.pop("load_in_4bit", None)
                 model_kwargs.pop("bnb_4bit_compute_dtype", None)
                 model_kwargs["torch_dtype"] = torch_dtype
+                logger.warning("4-bit load failed for %s; retrying with standard precision", model_path)
                 self.model = AutoModelForCausalLM.from_pretrained(
                     model_path,
                     **model_kwargs,
@@ -216,5 +220,6 @@ def load_backend(cfg) -> tuple[LLMBackend, str]:
                 entry = cfg["ollama"]
                 return OllamaBackend(entry["model"], entry["host"]), "ollama"
         except Exception:
+            logger.exception("LLM backend '%s' unavailable", name)
             continue
     raise RuntimeError("No LLM backend available")

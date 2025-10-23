@@ -53,12 +53,18 @@ def answer(query: str, time_hint: Dict | None, requested_mode: str, requested_ax
     retrieval = retrieve(query, window, mode, top_k=retrieval_top_k, axis=axis, domain=domain)
     retrieval_time = int((time.time() - start) * 1000)
 
+    metadata = retrieval.get("metadata", {})
     results = retrieval["results"]
+    coverage = metadata.get("coverage_fraction")
+    if coverage is None:
+        coverage = min(1.0, len(results) / max(1.0, float(retrieval_top_k)))
     signals = RetrievalSignals(
-        coverage=min(1.0, len(results) / max(1.0, float(retrieval_top_k))),
+        coverage=coverage,
         authority=max((item["authority"] for item in results), default=0.0),
     )
     plan = controller.plan(mode, signals)
+    hops_used = metadata.get("hops_executed", 1)
+    hop_shortfall = plan.hops > hops_used
 
     passages: List[ChronoPassage] = [
         ChronoPassage(
@@ -105,15 +111,20 @@ def answer(query: str, time_hint: Dict | None, requested_mode: str, requested_ax
                 "alternative_windows": _alternative_windows(results, window),
             }
             card = build_attribution_card(reduced, mode, axis, window, confidence, counterfactuals=counterfactuals)
+            degraded_flag = "CHRONO_SANITY"
+            if hop_shortfall:
+                degraded_flag = f"{degraded_flag}|HOP_SHORTFALL"
             controller_stats = {
-                "hops_used": plan.hops,
+                "hops_used": hops_used,
+                "hop_plan": {"planned": plan.hops, "executed": hops_used, "reason": plan.reason},
+                "hop_shortfall": hop_shortfall,
                 "signals": signals.to_dict(),
                 "latency_ms": retrieval_time,
                 "time_window_kind": window_kind,
                 "cost_usd": 0.0,
                 "tokens_in": len(query.split()),
                 "tokens_out": 0,
-                "degraded": "CHRONO_SANITY",
+                "degraded": degraded_flag,
                 "rerank_method": "ce",
                 "retrieval_weights": retrieval.get("weights_used"),
                 "router_metrics": getattr(router, "observability", {}),
@@ -143,15 +154,20 @@ def answer(query: str, time_hint: Dict | None, requested_mode: str, requested_ax
     if counterfactuals:
         card = build_attribution_card(reduced, mode, axis, window, confidence, counterfactuals=counterfactuals)
 
+    degraded_flag = "CHRONO_SANITY_WARN" if chronosanity_warn else None
+    if hop_shortfall:
+        degraded_flag = f"{degraded_flag}|HOP_SHORTFALL" if degraded_flag else "HOP_SHORTFALL"
     controller_stats = {
-        "hops_used": plan.hops,
+        "hops_used": hops_used,
+        "hop_plan": {"planned": plan.hops, "executed": hops_used, "reason": plan.reason},
+        "hop_shortfall": hop_shortfall,
         "signals": signals.to_dict(),
         "latency_ms": retrieval_time,
         "time_window_kind": window_kind,
         "cost_usd": 0.0,
         "tokens_in": len(query.split()),
         "tokens_out": tokens_out,
-        "degraded": "CHRONO_SANITY_WARN" if chronosanity_warn else None,
+        "degraded": degraded_flag,
         "rerank_method": "ce",
         "retrieval_weights": retrieval.get("weights_used"),
         "router_metrics": getattr(router, "observability", {}),

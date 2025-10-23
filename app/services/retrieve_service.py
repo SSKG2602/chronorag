@@ -79,6 +79,7 @@ def retrieve(
         (chunk_id, data) for chunk_id, data in candidates.items() if chunk_id in time_weights
     ]
     ranked_candidates.sort(key=lambda item: item[1]["lexical"] + item[1]["vector"], reverse=True)
+    pre_limit_candidate_count = len(ranked_candidates)
     ranked_candidates = ranked_candidates[:rerank_limit]
 
     texts = [data["chunk"].text for _, data in ranked_candidates]
@@ -159,11 +160,22 @@ def retrieve(
     _apply_region_diversity(results)
     results.sort(key=lambda item: item["final_score"], reverse=True)
     final_limit = min(top_k, len(results))
+    metadata = {
+        "raw_candidate_count": len(candidates),
+        "temporal_hits": len(time_weights),
+        "rerank_pre_limit": pre_limit_candidate_count,
+        "rerank_candidates": len(ranked_candidates),
+        "final_results": final_limit,
+        "fanout_limit": rerank_limit,
+        "coverage_fraction": min(1.0, pre_limit_candidate_count / float(max(1, rerank_limit))),
+        "hops_executed": 1,
+    }
     return {
         "query": query,
         "domain": inferred_domain,
         "results": results[:final_limit],
         "weights_used": weights_cfg,
+        "metadata": metadata,
     }
 
 

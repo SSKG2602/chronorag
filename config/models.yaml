@@ -1,0 +1,22 @@
+embeddings: {name: BAAI/bge-base-en-v1.5, dim: 768}
+reranker:
+  name: BAAI/bge-reranker-v2-m3
+  device: "auto"
+  fallback: cross-encoder/ms-marco-MiniLM-L-6-v2
+
+llm:
+  strategy_order: ["local_hf", "openai_compat"]
+  local_hf:
+    model_path: models_bin/phi3-mini-instruct
+    dtype: bfloat16   # use float32 if your hardware lacks bfloat16
+    device_map: auto
+    max_new_tokens: 512
+    temperature: 0.15
+    stop: ["<|ATTR_CARD|>"]
+  openai_compat:
+    endpoint_env: LLM_ENDPOINT
+    api_key_env: LLM_API_KEY
+    model: "microsoft/Phi-3-mini-128k-instruct"
+    max_tokens: 900
+    temperature: 0.15
+    stop: ["<|ATTR_CARD|>"]

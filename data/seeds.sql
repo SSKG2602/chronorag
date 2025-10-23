@@ -1,0 +1,1 @@
+-- Seed data is managed via the Python CLI and fixtures.

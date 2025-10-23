@@ -1,0 +1,33 @@
+name: chronorag
+channels: [conda-forge]
+dependencies:
+  - python=3.11
+  - uvicorn
+  - fastapi
+  - pydantic
+  - numpy
+  - scipy
+  - pandas
+  - scikit-learn
+  - psycopg
+  - sqlalchemy
+  - sqlmodel
+  - pgvector
+  - httpx
+  - orjson
+  - redis-py
+  - opentelemetry-api
+  - opentelemetry-sdk
+  - pydantic-settings
+  - pytest
+  - pytest-asyncio
+  - python-dotenv
+  - onnxruntime
+  - networkx
+  - pip
+  - pip:
+      - rank-bm25
+      - sentence-transformers
+      - tiktoken
+      - llama-cpp-python==0.2.*
+      - pyyaml

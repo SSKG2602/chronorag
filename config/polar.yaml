@@ -1,0 +1,43 @@
+policy_version: v1.2.0
+policy_sets:
+  generic:
+    time_axis_default: valid
+    time_mode_default: INTELLIGENT
+    hard_mode_for: ["roles","finance_critical"]
+    authority_ladder: ["filing","regulator","official_site","reliable_press","blog"]
+    retrieval_weights:
+      alpha: 0.55
+      beta_time: 0.25
+      gamma_authority: 0.15
+      delta_age: 0.05
+  world-economy:
+    time_axis_default: valid
+    time_mode_default: INTELLIGENT
+    hard_mode_for: ["explicit_year","explicit_century","explicit_period"]
+    authority_ladder: ["official_compendium","regulator","official_site","reliable_press","blog"]
+    retrieval_weights:
+      alpha: 0.50
+      beta_time: 0.35
+      gamma_authority: 0.15
+      delta_age: 0.00
+dhqc:
+  tau: 0.78
+  delta: 0.20
+  n_max: 3
+  n_hard: 6
+  fanout_cap_total: 250000
+controller:
+  tau: 0.78
+  delta: 0.20
+  n_max: 3
+  n_hard: 6
+  fanout_cap_total: 250000
+caches:
+  ttl_leadership_minutes: 15
+  ttl_generic_hours: 168
+chronosanity:
+  overlap_threshold: 0.6
+  evidence_only_reason: CHRONO_SANITY_BLOCK
+freshness:
+  triggers: ["filing","regulator","official"]
+  probe_interval_minutes: 60

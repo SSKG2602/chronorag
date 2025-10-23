@@ -1,0 +1,13 @@
+valid_axes: ["valid","transaction"]
+snap_rules:
+  INTELLIGENT_to_HARD: {contradiction: 0.5, low_confidence: 0.35}
+fiscal_year_start_by_tenant:
+  default: APRIL
+time_window_defaults:
+  decade_padding_years: 5
+  century_padding_years: 50
+fuzzy_period_map:
+  pre-industrial: {from: "0001-01-01", to: "1750-12-31"}
+  industrial revolution: {from: "1750-01-01", to: "1870-12-31"}
+  post-war: {from: "1945-01-01", to: "1960-12-31"}
+  late 20th century: {from: "1970-01-01", to: "1999-12-31"}

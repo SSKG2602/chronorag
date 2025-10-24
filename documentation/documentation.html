@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChronoRAG — Comprehensive Technical Documentation</title>
+    <!-- <style>
+:root{
+  --brand:#0F3443; --accent:#34E89E; --muted:#6B7280; --txt:#0B0F14; --bg:#FFFFFF;
+}
+*{box-sizing:border-box}
+html{background:var(--bg); color:var(--txt)}
+body{font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif; margin:0 auto; max-width:980px; padding:40px 24px}
+h1,h2,h3,h4,h5,h6{font-weight:700; line-height:1.25; margin:1.2em 0 .4em}
+h1{font-size:2rem} h2{font-size:1.6rem} h3{font-size:1.35rem} h4{font-size:1.2rem} h5{font-size:1.05rem} h6{font-size:1rem}
+p{margin:.75em 0}
+ul,ol{margin:.6em 0 .6em 1.2em}
+a{color:var(--brand); text-decoration:none} a:hover{text-decoration:underline}
+code,kbd,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+pre{background:#0b0f140d; padding:1em; border-radius:10px; overflow:auto; margin:1em 0}
+table{border-collapse:collapse; width:100%; margin:1em 0}
+th,td{border:1px solid #e5e7eb; padding:.6em .8em; vertical-align:top}
+thead th{background:#f8fafc}
+hr{border:none; border-top:1px solid #e5e7eb; margin:2em 0}
+blockquote{border-left:4px solid var(--accent); margin:1em 0; padding:.6em 1em; color:#0b0f1499}
+.callout{border-left:4px solid var(--brand); background:#0f34430a; padding:.8em 1em; border-radius:8px; margin:1em 0}
+.callout.warn{border-color:#eab308; background:#fff7d6}
+.badges{display:flex; gap:.5rem; flex-wrap:wrap; color:var(--muted)}
+.badge{border:1px solid #e5e7eb; border-radius:999px; padding:.25rem .6rem; font-size:.85rem}
+.toc{border:1px solid #e5e7eb; border-radius:10px; padding:1rem; background:#fafafa}
+.part{page-break-before:always}
+.cover{display:flex; flex-direction:column; gap:.75rem; padding:64px 0}
+.cover h1{font-size:2.4rem; margin:0}
+.subtitle{color:var(--muted)}
+.meta{color:var(--muted); font-size:.95rem}
+@media print{
+  @page{size:A4; margin:20mm 18mm 20mm 24mm}
+  header,footer{position:fixed; left:0; right:0; color:#6B7280}
+  header{top:0; padding:6px 24px; border-bottom:1px solid #e5e7eb}
+  footer{bottom:0; padding:6px 24px; border-top:1px solid #e5e7eb}
+  .part{page-break-before:always}
+}
+    </style> -->
+<link rel="stylesheet" href="documentation.css">
+</head>
+<body>
+    <div class="cover">
+        <h1>ChronoRAG — Comprehensive Technical Documentation</h1>
+        <p class="subtitle">Time-aware Retrieval with Deterministic Temporal Routing</p>
+        <p class="meta">Version: v-001</p>
+        <p class="meta">Author: SSKG (Shreyas Shashi Kumar Gowda)</p>
+        <p class="meta">Website: <a href="https://syperith.com">syperith.com</a></p>
+        <p class="meta">linkedin: <a href="https://www.linkedin.com/in/shreyasshashi/">personal</a></p>
+        <p class="meta">Reach out for coaching: <a href="https://www.linkedin.com/company/109470675/admin/dashboard/">coaching.syperith</a></p>
+        <p class="meta"><a href="https://topmate.io/shreyasshashi/">Topmate</a></p>
+
+        <p class="meta">Date: October 24, 2025</p>
+        <div class="badges">
+            <span class="badge">Python 3.11</span>
+            <span class="badge">FastAPI</span>
+            <span class="badge">PVDB</span>
+            <span class="badge">DHQC</span>
+            <span class="badge">GSM</span>
+            <span class="badge">Monotone Fusion</span>
+        </div>
+    </div>
+
+    <nav class="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#part-1">Part 1 – Introduction and Executive Overview</a>
+                <ul>
+                    <li><a href="#product-one-liner">Product One-Liner</a></li>
+                    <li><a href="#problem-statement">Problem Statement</a></li>
+                    <li><a href="#target-audience">Target Audience</a></li>
+                    <li><a href="#value-proposition">Value Proposition</a></li>
+                    <li><a href="#core-capabilities">Core Capabilities</a></li>
+                    <li><a href="#non-goals">Non-Goals</a></li>
+                    <li><a href="#high-level-workflow">High-Level Workflow</a></li>
+                    <li><a href="#constraints-and-assumptions">Constraints and Assumptions</a></li>
+                    <li><a href="#terminology-and-glossary">Terminology and Glossary</a></li>
+                </ul>
+            </li>
+            <li><a href="#part-2">Part 2 – Architecture and Components</a>
+                <ul>
+                    <li><a href="#architecture-overview">Architecture Overview</a></li>
+                    <li><a href="#module-map">Module map</a></li>
+                    <li><a href="#component-catalog">Component Catalog</a></li>
+                    <li><a href="#runtime-data-flow">Runtime Data Flow</a></li>
+                    <li><a href="#configuration-and-feature-flags">Configuration and Feature Flags</a></li>
+                    <li><a href="#extensibility-and-integration-points">Extensibility and Integration Points</a></li>
+                    <li><a href="#assumptions-constraints-and-trade-offs">Assumptions, Constraints, and Trade-offs</a></li>
+                    <li><a href="#open-questions-and-gaps">Open Questions and Gaps</a></li>
+                </ul>
+            </li>
+            <li><a href="#part-3">Part 3 – Data Ingestion and Indexing</a>
+                <ul>
+                    <li><a href="#objectives-and-scope-3">Objectives and Scope</a></li>
+                    <li><a href="#supported-data-sources-and-formats">Supported Data Sources and Formats</a></li>
+                    <li><a href="#ingestion-entry-points-and-triggers">Ingestion Entry Points and Triggers</a></li>
+                    <li><a href="#parsing-and-normalisation">Parsing and Normalisation</a></li>
+                    <li><a href="#chunking-and-segmentation-strategy">Chunking and Segmentation Strategy</a></li>
+                    <li><a href="#metadata-enrichment-and-schemas">Metadata Enrichment and Schemas</a></li>
+                    <li><a href="#deduplication-versioning-and-updates">Deduplication, Versioning, and Updates</a></li>
+                    <li><a href="#index-construction-and-maintenance">Index Construction and Maintenance</a></li>
+                    <li><a href="#validation-and-quality-gates">Validation and Quality Gates</a></li>
+                    <li><a href="#performance-characteristics">Performance Characteristics</a></li>
+                    <li><a href="#configuration-touchpoints">Configuration Touchpoints</a></li>
+                    <li><a href="#security-and-data-handling">Security and Data Handling</a></li>
+                    <li><a href="#open-gaps-and-next-steps">Open Gaps and Next Steps</a></li>
+                </ul>
+            </li>
+            <li><a href="#part-4">Part 4 – Retrieval, Ranking, and Context Assembly</a>
+                <ul>
+                    <li><a href="#objectives-and-scope-4">Objectives and Scope</a></li>
+                    <li><a href="#query-handling-and-normalisation">Query Handling and Normalisation</a></li>
+                    <li><a href="#retrieval-strategy">Retrieval Strategy</a></li>
+                    <li><a href="#ranking-scoring-and-diversity">Ranking, Scoring, and Diversity</a></li>
+                    <li><a href="#filtering-constraints-and-modes">Filtering, Constraints, and Modes</a></li>
+                    <li><a href="#context-assembly-and-outputs">Context Assembly and Outputs</a></li>
+                    <li><a href="#observability-and-controller-integration">Observability and Controller Integration</a></li>
+                    <li><a href="#failure-modes-and-fallbacks">Failure Modes and Fallbacks</a></li>
+                    <li><a href="#security-and-privacy-considerations">Security and Privacy Considerations</a></li>
+                    <li><a href="#gaps-and-potential-extensions">Gaps and Potential Extensions</a></li>
+                </ul>
+            </li>
+            <li><a href="#part-5">Part 5 – Generation Pipeline and Prompting Strategy</a>
+                <ul>
+                    <li><a href="#objectives-and-scope-5">Objectives and Scope</a></li>
+                    <li><a href="#generation-inputs-and-preconditions">Generation Inputs and Preconditions</a></li>
+                    <li><a href="#prompt-construction">Prompt Construction</a></li>
+                    <li><a href="#backend-selection-and-invocation">Backend Selection and Invocation</a></li>
+                    <li><a href="#evidence-selection-and-ordering">Evidence Selection and Ordering</a></li>
+                    <li><a href="#output-schema-and-validation">Output Schema and Validation</a></li>
+                    <li><a href="#fallbacks-and-retries">Fallbacks and Retries</a></li>
+                    <li><a href="#post-processing-and-attribution">Post-processing and Attribution</a></li>
+                    <li><a href="#configuration-levers">Configuration Levers</a></li>
+                    <li><a href="#safety-and-determinism">Safety and Determinism</a></li>
+                    <li><a href="#known-gaps-5">Known Gaps</a></li>
+                </ul>
+            </li>
+            <li><a href="#part-6">Part 6 – APIs, Services, and Interfaces</a>
+                <ul>
+                    <li><a href="#objectives-and-scope-6">Objectives and Scope</a></li>
+                    <li><a href="#interface-inventory">Interface Inventory</a></li>
+                    <li><a href="#endpoint-catalogue">Endpoint Catalogue</a></li>
+                    <li><a href="#request-and-response-behaviour">Request and Response Behaviour</a></li>
+                    <li><a href="#authentication-and-access-control">Authentication and Access Control</a></li>
+                    <li><a href="#cli-usage">CLI Usage</a></li>
+                    <li><a href="#error-handling-idempotency-and-retries">Error Handling, Idempotency, and Retries</a></li>
+                    <li><a href="#state-management">State Management</a></li>
+                    <li><a href="#observability-outputs">Observability Outputs</a></li>
+                    <li><a href="#known-gaps-6">Known Gaps</a></li>
+                </ul>
+            </li>
+            <li><a href="#part-7">Part 7 – Policy, Configuration, and Governance</a>
+                <ul>
+                    <li><a href="#objectives-and-scope-7">Objectives and Scope</a></li>
+                    <li><a href="#policy-stack-overview">Policy Stack Overview</a></li>
+                    <li><a href="#runtime-configuration-flow">Runtime Configuration Flow</a></li>
+                    <li><a href="#chronoguard-controls">ChronoGuard Controls</a></li>
+                    <li><a href="#environment-variables-and-secrets">Environment Variables and Secrets</a></li>
+                    <li><a href="#governance-practices">Governance Practices</a></li>
+                    <li><a href="#known-gaps-7">Known Gaps</a></li>
+                </ul>
+            </li>
+            <li><a href="#part-8">Part 8 – Observability, QA, and Performance</a>
+                <ul>
+                    <li><a href="#objectives-and-scope-8">Objectives and Scope</a></li>
+                    <li><a href="#built-in-observability-surfaces">Built-in Observability Surfaces</a></li>
+                    <li><a href="#testing-and-qa-artefacts">Testing and QA Artefacts</a></li>
+                    <li><a href="#test-coverage-snapshot">Test coverage snapshot</a></li>
+                    <li><a href="#performance-considerations">Performance Considerations</a></li>
+                    <li><a href="#logging-and-metrics-gaps">Logging and Metrics Gaps</a></li>
+                    <li><a href="#known-gaps-8">Known Gaps</a></li>
+                </ul>
+            </li>
+            <li><a href="#part-9">Part 9 – Security, Privacy, and Compliance</a>
+                <ul>
+                    <li><a href="#objectives-and-scope-9">Objectives and Scope</a></li>
+                    <li><a href="#authentication-and-authorization">Authentication and Authorization</a></li>
+                    <li><a href="#data-handling-and-storage">Data Handling and Storage</a></li>
+                    <li><a href="#secrets-and-configuration-management">Secrets and Configuration Management</a></li>
+                    <li><a href="#compliance-considerations">Compliance Considerations</a></li>
+                    <li><a href="#known-gaps-and-recommendations">Known Gaps and Recommendations</a></li>
+                </ul>
+            </li>
+            <li><a href="#part-10">Part 10 – Operations, Maintenance, and Roadmap</a>
+                <ul>
+                    <li><a href="#objectives-and-scope-10">Objectives and Scope</a></li>
+                    <li><a href="#repository-layout">Repository Layout</a></li>
+                    <li><a href="#setup-and-installation">Setup and Installation</a></li>
+                    <li><a href="#running-the-stack">Running the Stack</a></li>
+                    <li><a href="#state-and-maintenance">State and Maintenance</a></li>
+                    <li><a href="#deployment-considerations">Deployment Considerations</a></li>
+                    <li><a href="#roadmap-ideas-for-operators">Roadmap Ideas for Operators</a></li>
+                </ul>
+            </li>
+            <li><a href="#glossary">Glossary</a></li>
+            <li><a href="#evidence-index">Evidence Index</a></li>
+            <li><a href="#consistency-checklist">Consistency Checklist</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <article id="part-1" class="part">
+            <h1>Part 1 – Introduction and Executive Overview</h1>
+            <h2 id="product-one-liner">Product One-Liner</h2>
+            <p>ChronoRAG is a Python 3.11 FastAPI + CLI stack that delivers time-aware retrieval-augmented generation (RAG) by combining deterministic temporal routing, hybrid retrieval, and audited answer synthesis.</p>
+            <h2 id="problem-statement">Problem Statement</h2>
+            <p>Most RAG stacks ignore when a fact was true, returning stale answers once the world changes. ChronoRAG mitigates this by storing every chunk with explicit valid and transactional windows (<code>app/utils/time_windows.py</code>) and by routing queries through the TemporalRouter so the correct axis and mode are enforced (<code>core/router/temporal_router.py</code>). Retrieval then filters and scores evidence in time-aware fashion (<code>app/services/retrieve_service.py</code>), while the answer service tracks ChronoSanity conflicts before handing content to the generator (<code>app/services/answer_service.py</code>). As a result, questions such as “Who led Company X on 1 July 2015?” can be answered with citations that are guaranteed to overlap the requested window.</p>
+            <h2 id="target-audience">Target Audience</h2>
+            <p>Engineers and researchers experimenting with temporal RAG pipelines who need controllable building blocks they can extend.</p>
+            <p>Data teams curating historical corpora (e.g., Maddison world economy datasets) that must remain auditable over long time spans.</p>
+            <p>Analysts building compliance or investigative workflows that rely on attribution cards and reproducible temporal filters.</p>
+            <p>Platform operators who require a programmable API/CLI surface rather than a closed UI.</p>
+            <p>Getting started: follow the environment-specific walkthroughs in <code>howtorunme.md</code> to initialise dependencies, ingest sample data, and run the API or CLI (src: <code>howtorunme.md</code>).</p>
+            <h2 id="value-proposition">Value Proposition</h2>
+            <p>Deterministic temporal routing: TemporalRouter selects axis, mode, and window using lexicon cues plus policy defaults (<code>config/axis_policy.yaml</code>, <code>config/polar.yaml</code>).</p>
+            <p>Bi-temporal ingestion: ingest_service attaches valid/tx windows, entities, and unit hints before persisting to the PVDB store (<code>storage/pvdb/dao.py</code>).</p>
+            <p>Hybrid retrieval with monotone fusion: lexical BM25, ANN vectors, cross-encoder reranking, optional LLM judge, and monotone temporal fusion ensure time-aligned scoring.</p>
+            <p>Fusion weights grounded in policy: the monotone fusion weights (alpha, beta_time, gamma_authority, delta_age) track the active retrieval policy, keeping scores temporally monotonic (src: <code>config/polar.yaml</code>).</p>
+            <p>ChronoSanity safeguards: conflict detection (<code>app/utils/chrono_reducer.py</code>) degrades to evidence-only cards when overlapping windows disagree.</p>
+            <p>Structured outputs with fallbacks: the generator enforces JSON answers with range + two bullets (<code>core/generator/generate.py</code>) and supplies deterministic digests when models fail.</p>
+            <p>Unified API and CLI: FastAPI routes (<code>app/routes/*.py</code>) and <code>cli/chronorag_cli.py</code> expose the same ingest/retrieve/answer/maintenance controls.</p>
+            <h2 id="core-capabilities">Core Capabilities</h2>
+            <p>Temporal routing and policies: TemporalRouter and DHQCController consume policy bundles to keep answers aligned with domain-specific rules.</p>
+            <p>PVDB storage with ANN index: the in-memory + JSON-persisted PVDB (<code>storage/pvdb/dao.py</code>) stores chunk metadata, embeddings, facets, and transactional lineage.</p>
+            <p>Hybrid retrieval stack: BM25 lexical search (<code>core/retrieval/lexical_bm25.py</code>), ANN embeddings (<code>core/retrieval/vector_ann.py</code>), cross-encoder reranker, and optional judge reranker cooperate inside <code>app/services/retrieve_service.py</code>.</p>
+            <p>ChronoReducer + ChronoSanity: canonicalisation and overlap checks drive attribution cards and ChronoSanity evidence-only decisions (<code>app/utils/chrono_reducer.py</code>).</p>
+            <p>Generator enforcement: <code>core/generator/generate.py</code> assembles prompts, loads the configured backend (<code>core/generator/llm_loader.py</code>), validates JSON, and emits evidence digests on error.</p>
+            <p>Policy and maintenance surfaces: /policy + /policy/apply expose versioned configuration while maintenance_service.purge_system resets PVDB, cache, and policy idempotency state.</p>
+            <div class="callout">
+                <h2 id="non-goals">Non-Goals</h2>
+                <p>ChronoRAG ships without production database deployments; PVDB defaults to local JSON persistence and Redis is optional (<code>storage/cache/redis_client.py</code>).</p>
+                <p>Graph integrations are disabled by default; <code>storage/graph/neo4j_client.py</code> raises until explicitly replaced.</p>
+                <p>No web crawler, RSS poller, or auto-refresh service is included—freshness triggers in configs act as dormant stubs.</p>
+                <p>Multilingual retrieval, speech interfaces, and general-purpose chat behaviour fall outside the scaffold’s scope.</p>
+            </div>
+            <h2 id="high-level-workflow">High-Level Workflow</h2>
+            <p>Ingest: /ingest or the CLI loads JSONL records or raw text, enriches facets/entities/units, and stores chunks with valid + transactional windows.</p>
+            <p>Persist & embed: PVDB allocates document/chunk IDs, writes vectors into the in-memory ANN index, and can snapshot to <code>storage/pvdb/persisted.json</code>.</p>
+            <p>Route: TemporalRouter infers axis, mode, and window from query text, optional time hints, and policy defaults.</p>
+            <p>Retrieve: lexical BM25 and ANN results are merged, temporally pre-masked, reranked, and fused with authority/age penalties.</p>
+            <p>Reduce & audit: ChronoReducer deduplicates passages, ChronoSanity checks for overlapping intervals, and controller stats capture hop coverage.</p>
+            <p>Generate & respond: the generator composes a JSON answer or evidence digest, attribution cards enumerate sources and windows, and controller metadata exposes hops, coverage, and degradation flags.</p>
+            <div class="callout">
+                <h2 id="constraints-and-assumptions">Constraints and Assumptions</h2>
+                <p>Default configuration expects Python 3.11, FastAPI, and optional Hugging Face models defined in <code>config/models.yaml</code>; without credentials, light mode stubs are used.</p>
+                <p>CHRONORAG_LIGHT auto-enables stub embeddings and reranking during tests; set CHRONORAG_LIGHT=0 to load full models.</p>
+                <p>Redis caching and external database endpoints are optional; when unavailable, in-process fallbacks maintain correctness albeit without durability guarantees.</p>
+                <p>LLM judge reranking is disabled unless <code>config/models.yaml</code> defines llm.judge.enabled: true.</p>
+                <p>Policy bundles (POLAR) drive axis/mode defaults, authority ladders, and fusion weights; altering them requires versioned /policy/apply calls with the admin token defined in <code>app/services/policy_service.py</code>.</p>
+                <p>The scaffold assumes single-tenant operation out of the box; tenant metadata fields exist but enforcement beyond tagging is left to downstream consumers.</p>
+            </div>
+            <h2 id="terminology-and-glossary">Terminology and Glossary</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Term</th>
+                        <th>Definition</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>TimeWindow</td>
+                        <td>Closed-open interval object that stores start/end timestamps and overlap logic (<code>app/utils/time_windows.py</code>).</td>
+                    </tr>
+                    <tr>
+                        <td>PVDB</td>
+                        <td>Lightweight vector store that keeps documents, chunks, embeddings, and lineage in memory with JSON snapshots (<code>storage/pvdb/dao.py</code>).</td>
+                    </tr>
+                    <tr>
+                        <td>TemporalRouter</td>
+                        <td>Policy-driven resolver that chooses axis, mode, domain, and query window before retrieval (<code>core/router/temporal_router.py</code>).</td>
+                    </tr>
+                    <tr>
+                        <td>DHQCController</td>
+                        <td>Hop planner that determines retrieval passes based on coverage signals (<code>core/dhqc/controller.py</code>).</td>
+                    </tr>
+                    <tr>
+                        <td>ChronoPassage</td>
+                        <td>Normalised passage wrapper used for reduction, conflict checks, and attribution (<code>app/utils/chrono_reducer.py</code>).</td>
+                    </tr>
+                    <tr>
+                        <td>ChronoSanity</td>
+                        <td>Policy-governed overlap detection that can emit evidence-only responses when passages contradict each other.</td>
+                    </tr>
+                    <tr>
+                        <td>Attribution Card</td>
+                        <td>Response payload listing sources, intervals, confidence, and optional counterfactuals (<code>app/utils/cards.py</code>).</td>
+                    </tr>
+                    <tr>
+                        <td>Light mode</td>
+                        <td>Environment flag that swaps heavy models for deterministic stubs during tests (<code>app/light_mode.py</code>).</td>
+                    </tr>
+                    <tr>
+                        <td>Authority ladder</td>
+                        <td>Ordered source preference configured per domain inside <code>config/polar.yaml</code>.</td>
+                    </tr>
+                    <tr>
+                        <td>Controller stats</td>
+                        <td>Diagnostics emitted with answers that record hops, coverage, latency, and degradation reasons (<code>app/services/answer_service.py</code>).</td>
+                    </tr>
+                </tbody>
+            </table>
+        </article>
+
+        <article id="part-2" class="part">
+            <h1>Part 2 – Architecture and Components</h1>
+            <h2 id="architecture-overview">Architecture Overview</h2>
+            <p>ChronoRAG is a service-oriented Python application built around three collaborating layers: FastAPI endpoints in <code>app/</code>, retrieval and generation logic in <code>core/</code>, and storage/cache utilities in <code>storage/</code>. Requests can arrive through REST or the bundled CLI, but regardless of entry point they traverse the same ingest → retrieve → answer pipeline described in Part 1. Graph services, external schedulers, and freshness daemons are intentionally absent from the scaffold; the focus is a deterministic, inspectable core that teams can extend.</p>
+            <pre><code>Client (REST or CLI) → FastAPI route (app/routes/*.py) → TemporalRouter (core/router/temporal_router.py) → PVDB + ANN store (storage/pvdb) → retrieval stack (app/services/retrieve_service.py) with BM25 + cross-encoder → ChronoReducer & ChronoSanity (app/utils/chrono_reducer.py) → generator (core/generator/generate.py) → attribution card builder (app/utils/cards.py) → response with controller stats.</code></pre>
+            <h2 id="module-map">Module map</h2>
+            <p><code>app/</code> → FastAPI application, dependency wiring, request schemas, and orchestration services (src: <code>app/main.py</code>; <code>app/deps.py</code>; <code>app/services/</code>).</p>
+            <p><code>core/</code> → retrieval heuristics, hop planning, router logic, and generator backends (src: <code>core/retrieval/</code>; <code>core/dhqc/controller.py</code>; <code>core/router/temporal_router.py</code>; <code>core/generator/</code>).</p>
+            <p><code>storage/</code> → in-memory PVDB persistence, cache adapters, and graph stubs (src: <code>storage/pvdb/dao.py</code>; <code>storage/cache/redis_client.py</code>; <code>storage/graph/neo4j_client.py</code>).</p>
+            <p><code>config/</code> → YAML policy bundles, axis rules, model configuration, and tenant defaults (src: <code>config/polar.yaml</code>; <code>config/axis_policy.yaml</code>; <code>config/models.yaml</code>; <code>config/tenants/default.yaml</code>).</p>
+            <p><code>cli/</code> and <code>scripts/</code> → operational entry points, automation helpers, and smoke-test utilities (src: <code>cli/chronorag_cli.py</code>; <code>install.sh</code>; <code>checkllm.sh</code>; <code>query.sh</code>).</p>
+            <p><code>tests/</code> → unit and end-to-end regression coverage for ingest, retrieval, and answer orchestration (src: <code>tests/unit/</code>; <code>tests/e2e/</code>).</p>
+            <h2 id="component-catalog">Component Catalog</h2>
+            <h3>FastAPI Application (<code>app/main.py</code>)</h3>
+            <p><strong>Purpose:</strong> Expose /ingest, /retrieve, /answer, /policy, and /incident routes.</p>
+            <p><strong>Inputs:</strong> JSON payloads validated by Pydantic schemas in <code>app/schemas</code>.</p>
+            <p><strong>Outputs:</strong> Structured responses containing chunk IDs, retrieval results, or answer payloads.</p>
+            <p><strong>Notes:</strong> Shares dependency state via providers in <code>app/deps.py</code>.</p>
+            <h3>CLI (<code>cli/chronorag_cli.py</code>)</h3>
+            <p><strong>Purpose:</strong> Run ingest, retrieve, answer, and purge flows without launching an HTTP server.</p>
+            <p><strong>Inputs:</strong> File paths, inline text, and query strings provided as arguments.</p>
+            <p><strong>Outputs:</strong> Pretty-printed JSON that mirrors the REST responses.</p>
+            <p><strong>Notes:</strong> Imports the same services as the API ensuring behaviour parity.</p>
+            <h3>PVDB Store (<code>storage/pvdb/dao.py</code>)</h3>
+            <p><strong>Purpose:</strong> Persist documents and chunks with valid/transaction windows, facets, and embeddings.</p>
+            <p><strong>Inputs:</strong> Normalised text records produced by <code>app/services/ingest_service.py</code>.</p>
+            <p><strong>Outputs:</strong> Lists of ChunkRecord objects for retrieval and answer services.</p>
+            <p><strong>Notes:</strong> Uses in-memory structures with optional JSON snapshots (<code>storage/pvdb/persisted.json</code>); no Postgres dependency is shipped.</p>
+            <h3>ANN Index (<code>core/retrieval/vector_ann.py</code>)</h3>
+            <p><strong>Purpose:</strong> Provide cosine-similarity search over chunk embeddings.</p>
+            <p><strong>Inputs:</strong> Text to encode plus metadata about the originating document.</p>
+            <p><strong>Outputs:</strong> Ranked neighbours with similarity scores.</p>
+            <p><strong>Notes:</strong> Falls back to deterministic hash embeddings when CHRONORAG_LIGHT is enabled.</p>
+            <h3>Lexical Retrieval (<code>core/retrieval/lexical_bm25.py</code>)</h3>
+            <p><strong>Purpose:</strong> Supply BM25-style scores for candidate passages.</p>
+            <p><strong>Inputs:</strong> Query string and (chunk_id, text) pairs.</p>
+            <p><strong>Outputs:</strong> Ranked chunk IDs with lexical scores.</p>
+            <p><strong>Notes:</strong> Degrades to token overlap when rank-bm25 is unavailable.</p>
+            <h3>Temporal Router (<code>core/router/temporal_router.py</code>)</h3>
+            <p><strong>Purpose:</strong> Resolve axis, mode, time window, and inferred domain before retrieval.</p>
+            <p><strong>Inputs:</strong> Raw query, optional time hint, policy bundles (<code>config/polar.yaml</code>, <code>config/axis_policy.yaml</code>).</p>
+            <p><strong>Outputs:</strong> RouteDecision consumed by retrieval and answer services.</p>
+            <p><strong>Notes:</strong> Tracks observability fields (domain, time_window_kind) for diagnostics.</p>
+            <h3>DHQC Controller (<code>core/dhqc/controller.py</code>)</h3>
+            <p><strong>Purpose:</strong> Decide hop counts and fan-out budgets given coverage and mode.</p>
+            <p><strong>Inputs:</strong> Retrieval coverage signals captured in RetrievalSignals.</p>
+            <p><strong>Outputs:</strong> Hop plans recorded in controller stats.</p>
+            <p><strong>Notes:</strong> Configured via POLAR’s dhqc block.</p>
+            <h3>Retrieval Service (<code>app/services/retrieve_service.py</code>)</h3>
+            <p><strong>Purpose:</strong> Orchestrate hybrid retrieval, temporal filtering, reranking, and monotone fusion.</p>
+            <p><strong>Inputs:</strong> Query, TimeWindow, mode/axis, and optional domain.</p>
+            <p><strong>Outputs:</strong> Ranked passage dictionaries with authority, time weight, and fusion score plus metadata about candidate counts.</p>
+            <p><strong>Notes:</strong> Can invoke an optional LLM judge reranker when enabled in <code>config/models.yaml</code>.</p>
+            <h3>Answer Service (<code>app/services/answer_service.py</code>)</h3>
+            <p><strong>Purpose:</strong> Call retrieval, run ChronoReducer, apply ChronoSanity policies, and trigger the generator.</p>
+            <p><strong>Inputs:</strong> Query, requested mode/axis, optional time hints.</p>
+            <p><strong>Outputs:</strong> Final answer text (or evidence digest), attribution card, controller stats, and audit trail.</p>
+            <p><strong>Notes:</strong> Downgrades to evidence-only when conflicts exceed policy thresholds.</p>
+            <h3>Generator (<code>core/generator/generate.py</code>)</h3>
+            <p><strong>Purpose:</strong> Assemble prompts, execute the configured LLM backend, enforce JSON schema, and provide deterministic fallbacks.</p>
+            <p><strong>Inputs:</strong> Query, mode/axis, TimeWindow, reduced passages, model configuration.</p>
+            <p><strong>Outputs:</strong> Answer string (JSON when successful) and token count estimate.</p>
+            <p><strong>Notes:</strong> Supports local Hugging Face, OpenAI-compatible, llama.cpp, and Ollama backends via llm_loader.</p>
+            <h3>Policy Service (<code>app/services/policy_service.py</code>)</h3>
+            <p><strong>Purpose:</strong> Return current policy bundle or apply updates with admin token enforcement.</p>
+            <p><strong>Inputs:</strong> Policy change payloads and optional idempotency key.</p>
+            <p><strong>Outputs:</strong> Acceptance status including previous version.</p>
+            <p><strong>Notes:</strong> Updates in-memory policy state shared across API and CLI sessions.</p>
+            <h3>Cache Client (<code>storage/cache/redis_client.py</code>)</h3>
+            <p><strong>Purpose:</strong> Provide optional Redis-backed caching for expensive lookups.</p>
+            <p><strong>Inputs:</strong> Cache keys and JSON-serialisable values.</p>
+            <p><strong>Outputs:</strong> Cached payloads or in-process fallback storage.</p>
+            <p><strong>Notes:</strong> Safe to run without Redis; all operations fall back to a Python dictionary.</p>
+            <h2 id="runtime-data-flow">Runtime Data Flow</h2>
+            <p>Ingest – Payloads flow through ingest_service.ingest, which parses structured JSONL rows when possible and processes plain text otherwise, enriching facets, entities, units, and authority scores before persisting to PVDB.</p>
+            <p>Persist & index – PVDB writes ChunkRecord objects and adds embeddings to the ANN index; persisted.json can be used to reload state between runs.</p>
+            <p>Route – TemporalRouter inspects the query/time hint and policy defaults to pick axis, mode, domain, and window.</p>
+            <p>Retrieve – retrieve_service gathers BM25 and ANN candidates, applies temporal masks (HARD or INTELLIGENT), reranks with the cross-encoder, optionally blends judge scores, and executes monotone temporal fusion.</p>
+            <p>Reduce/Audit – Results are converted into ChronoPassage objects, reduced to unique passages, and checked for ChronoSanity conflicts; controller stats capture hop plans and coverage.</p>
+            <p>Generate – generate_answer builds prompts, enforces JSON-format output, and falls back to an evidence digest when validation fails or the backend is unreachable.</p>
+            <p>Respond – Attribution cards and controller stats are assembled, and any conflicts are emitted in the audit trail.</p>
+            <h2 id="configuration-and-feature-flags">Configuration and Feature Flags</h2>
+            <p>Model selection (<code>config/models.yaml</code>) – Controls embedding model, cross-encoder, LLM strategy order, stop tokens, and temperature/token budgets.</p>
+            <p>Policy bundles (<code>config/polar.yaml</code>) – Set authority ladders, time-axis defaults, retrieval weight coefficients, DHQC parameters, cache TTLs, and ChronoSanity thresholds. Example weights for the generic set: alpha: 0.55, beta_time: 0.25, gamma_authority: 0.15, delta_age: 0.05 (src: <code>config/polar.yaml</code>).</p>
+            <p>Axis policy (<code>config/axis_policy.yaml</code>) – Defines valid axes, snap rules for switching to HARD mode, period windows, and padding values.</p>
+            <p>Tenant defaults (<code>config/tenants/default.yaml</code>) – Provides fiscal-year start and locale metadata used during ingest.</p>
+            <p>Environment flags – CHRONORAG_LIGHT, HF_TOKEN, REDIS_URL, LLM_ENDPOINT, LLM_API_KEY, TOKENIZERS_PARALLELISM, and HF_HUB_DISABLE_PROGRESS_BARS.</p>
+            <h2 id="extensibility-and-integration-points">Extensibility and Integration Points</h2>
+            <p>Swap embeddings, rerankers, or LLMs by editing <code>config/models.yaml</code> or extending <code>core/generator/llm_loader.py</code>.</p>
+            <p>Introduce new domains or retrieval weights by adding policy sets to <code>config/polar.yaml</code>.</p>
+            <p>Extend heuristics in <code>core/gsm/</code> (intent detection, fiscal locale handling, timeline reduction) to better fit custom corpora.</p>
+            <p>Replace PVDB with an external store by adapting <code>storage/pvdb/dao.py</code> and dependency wiring in <code>app/deps.py</code>.</p>
+            <p>Implement true Redis or remote caches by pointing REDIS_URL at a managed service.</p>
+            <p>Build job runners or freshness daemons externally and interact with ChronoRAG through the documented APIs or CLI.</p>
+            <div class="callout">
+                <h2 id="assumptions-constraints-and-trade-offs">Assumptions, Constraints, and Trade-offs</h2>
+                <p>Single-process execution with shared in-memory state; concurrent writers must be coordinated outside the repo.</p>
+                <p>PVDB snapshots are not transactional; sudden termination during ingest may lose the in-memory working set.</p>
+                <p>Graph reasoning is out of scope; only lexical/semantic retrieval plus policy-driven heuristics are implemented.</p>
+                <p>Light mode prioritises determinism over fidelity, which is ideal for tests but reduces retrieval/generation quality.</p>
+                <p>Authority scoring is heuristic (<code>app/utils/authority.py</code>) and based solely on URI substrings until replaced with richer metadata.</p>
+            </div>
+            <div class="callout">
+                <h2 id="open-questions-and-gaps">Open Questions and Gaps</h2>
+                <p>Persistent database integrations (Postgres, Neo4j) are not bundled; teams must supply their own adapters if required.</p>
+                <p>Freshness triggers and background schedulers are not implemented; documentation should cover recommended patterns when added.</p>
+                <p>Retention periods for persisted JSON snapshots, attribution cards, and logs are unspecified.</p>
+                <p>Concurrency, locking, and multi-process behaviour are undefined; additional coordination logic will be needed for production.</p>
+                <p>Security controls beyond the static admin token (authN/authZ, rate limits, audit trails) are intentionally left to downstream deployments.</p>
+            </div>
+        </article>
+
+        <article id="part-3" class="part">
+            <h1>Part 3 – Data Ingestion and Indexing</h1>
+            <h2 id="objectives-and-scope-3">Objectives and Scope</h2>
+            <p>ChronoRAG’s ingestion layer turns local text files or inline snippets into bi-temporal chunks stored in the PVDB vector store. The pipeline is intentionally lightweight: it favours deterministic enrichment (valid/transaction windows, facets, entities, units, authority) over large-scale ETL so that researchers can audit every step. This section documents the behaviour implemented in <code>app/services/ingest_service.py</code>, <code>storage/pvdb</code>, and related utilities.</p>
+            <h2 id="supported-data-sources-and-formats">Supported Data Sources and Formats</h2>
+            <p>Structured JSON Lines – Each line is parsed as JSON; records may include text, facets, doc_id, external_id, valid, and tx sections. This format is used by the Maddison world-economy corpus bundled under <code>data/</code>.</p>
+            <p>Domain defaults – If world-economy payloads omit identifiers, the service assigns WORLD_ECONOMY_DOC_ID and a stable facet set (tenant lab, domain world-economy, source oecd-maddison, etc.) so every chunk aligns with downstream policies (src: <code>app/services/ingest_service.py</code>).</p>
+            <p>Raw text snippets – Strings ingested via CLI --text arguments or API payloads become single chunks. The ingestion pipeline infers a coarse valid/transaction window from the text’s first date token.</p>
+            <p>File paths – /ingest and the CLI accept paths to UTF-8 text or JSONL files. Non-existent paths are skipped quietly to keep batch jobs resilient.</p>
+            <p>Encoding – Inputs are read using UTF-8; additional encodings are not auto-detected.</p>
+            <p>Out of scope – HTML, PDF, RSS feeds, and binary attachments are not parsed by the repository; external preprocessing must convert them to the supported text/JSONL formats.</p>
+            <h2 id="ingestion-entry-points-and-triggers">Ingestion Entry Points and Triggers</h2>
+            <p>/ingest POST (FastAPI) – Validates payloads with <code>app/schemas/ingest.py</code> and forwards them to ingest_service.ingest.</p>
+            <p>CLI command – <code>python -m cli.chronorag_cli ingest ...</code> calls the same service, enabling scripted batches without running the API.</p>
+            <p>Tests and notebooks – Integration tests and Colab/Kaggle notebooks import ingest directly to seed sample corpora.</p>
+            <p>Freshness probes – When ingested URIs match triggers configured in <code>config/polar.yaml</code> (freshness.triggers), _apply_freshness_policy writes probe epochs into the optional Redis cache for later monitoring. No background job ships in the repo, but the hook is present.</p>
+            <p>No DLQ or scheduler – Failed JSON parsing raises an exception; there is no dead-letter queue or automatic retry logic.<sup>1</sup></p>
+            <p><sup>1</sup>The repository deliberately omits queue infrastructure so adopters can plug in their own message bus/job runner.</p>
+            <h2 id="parsing-and-normalisation">Parsing and Normalisation</h2>
+            <p>Structured mode – _try_parse_structured ensures every non-blank line is valid JSON before treating the payload as structured input.</p>
+            <p>Facet merging – _merge_facets overlays defaults (e.g., world-economy tenant/domain metadata) without overwriting supplied keys.</p>
+            <p>Valid window resolution – _resolve_valid_window accepts ISO dates, integer year, or per-domain defaults. World-economy records default to year granularity with a sigma of 90 days.</p>
+            <p>Transaction window – _resolve_tx_window converts optional tx.start/tx.end into a TimeWindow. Missing payloads fall back to None.</p>
+            <p>Entity enrichment – _derive_entities looks for keywords (“GDP”, “population”, country names) across text, section, and sections fields to assign tags such as Country:USA or Region:Europe.</p>
+            <p>Unit detection – _detect_units uses regex patterns for “1990 international dollars”, percentages, ratios, and adds domain-specific defaults.</p>
+            <p>Authority scoring – score_source feeds URIs into <code>app/utils/authority.py</code>, producing authority and risk values used by retrieval.</p>
+            <p>Unstructured fallback – _ingest_unstructured extracts the first parsable date, builds a 1-day transaction window, and tags units/authority but leaves facets empty.</p>
+            <h2 id="chunking-and-segmentation-strategy">Chunking and Segmentation Strategy</h2>
+            <p>The repository does not implement additional chunk splitting; each structured record or unstructured text blob becomes one chunk.</p>
+            <p>Chunk boundaries are therefore controlled by whoever prepares the source JSONL/text.</p>
+            <p>When structured records include sections or tags, those fields inform metadata but do not alter the stored text span.</p>
+            <p>If finer segmentation is required, users should pre-chunk documents before invoking /ingest.</p>
+            <h2 id="metadata-enrichment-and-schemas">Metadata Enrichment and Schemas</h2>
+            <p>Each ingested chunk maps to <code>storage/pvdb/models.ChunkRecord</code>, containing:</p>
+            <ul>
+                <li>chunk_id, doc_id, text, uri, authority.</li>
+                <li>valid_window (start/end in UTC) and optional tx_window.</li>
+                <li>external_id, version_id for lineage.</li>
+                <li>facets (tenant, domain, source, locale, fiscal year start, etc.).</li>
+                <li>entities, tags, units (detected as described above).</li>
+                <li>time_granularity, time_sigma_days when provided.</li>
+                <li>embedding (vector stored as list) and extra metadata.</li>
+            </ul>
+            <p>Document-level updates (title, sections, revision metadata) are captured via _handle_ledger which calls PVDB.upsert_document_metadata.</p>
+            <h2 id="deduplication-versioning-and-updates">Deduplication, Versioning, and Updates</h2>
+            <p>external_id support allows idempotent updates. If a new chunk arrives with the same external_id, PVDB shortens the previous chunk’s transactional window to end at the new chunk’s start.</p>
+            <p>version_id is sourced from tx.revision_id or revision_id fields and stored alongside each chunk for downstream audit.</p>
+            <p>PVDB.external_index keeps a mapping of external_id → chunk_id so later ingests can find the prior version quickly.</p>
+            <p>There is no automated deletion/tombstoning; removing chunks requires bespoke tooling.</p>
+            <p>Idempotent ingest example: ingesting a record with external_id="world:1870" creates a new chunk; re-ingesting updated text with the same external_id shortens the prior chunk’s transactional window to the new start date and links the replacement chunk, preserving temporal lineage (src: <code>storage/pvdb/dao.py</code>; <code>app/services/ingest_service.py</code>).</p>
+            <h2 id="index-construction-and-maintenance">Index Construction and Maintenance</h2>
+            <p>ANN index – InMemoryANNIndex encodes text using SentenceTransformers (or hash-based stubs in light mode) and stores vectors in-memory.</p>
+            <p>Lexical index – Retrieval reuses PVDB’s chunk list as a corpus for BM25; no standalone inverted index is persisted.</p>
+            <p>Temporal filtering – PVDB.temporal_filter applies HARD or INTELLIGENT masks using helper functions in <code>app/utils/time_windows.py</code>.</p>
+            <p>Persistence – PVDB.flush() snapshots documents, chunks, and the external index to JSON. Reloading reconstructs the ANN index automatically.</p>
+            <p>No background rebuilds – Re-embedding or re-indexing must be triggered manually (e.g., by re-ingesting content).</p>
+            <h2 id="validation-and-quality-gates">Validation and Quality Gates</h2>
+            <p>Structured ingest fails fast if any line is invalid JSON; there is no partial acceptance.</p>
+            <p>Valid/transaction windows are normalised via make_window, guaranteeing start ≤ end in UTC.</p>
+            <p>Unit/entity heuristics are best-effort and always return at least n/a to simplify downstream assumptions.</p>
+            <p>Freshness probes are optional; if Redis is unavailable, _apply_freshness_policy silently succeeds using the in-memory cache fallback.</p>
+            <p>Beyond these safeguards, the repository does not enforce schema constraints or human review pipelines.</p>
+            <h2 id="performance-characteristics">Performance Characteristics</h2>
+            <p>_iter_batches groups file paths or text blobs into up to four batches when CUDA is available to amortise embedding work.</p>
+            <p>GPU detection relies on torch.cuda.is_available(); otherwise all processing occurs on CPU.</p>
+            <p>Ingest concludes with a single pvdb.flush() call to avoid repeated disk writes during large batches.</p>
+            <p>Throughput is bounded by embedding/model loading when CHRONORAG_LIGHT=0; in light mode ingestion is dominated by Python I/O.</p>
+            <h2 id="configuration-touchpoints">Configuration Touchpoints</h2>
+            <p><code>config/polar.yaml</code> supplies freshness triggers, cache TTLs, DHQC parameters, and authority ladders used during ingest.</p>
+            <p><code>config/tenants/default.yaml</code> defines fiscal year defaults applied to facets when none are supplied.</p>
+            <p>Environment variables such as CHRONORAG_LIGHT, HF_TOKEN, and REDIS_URL influence model loading and freshness cache behaviour.</p>
+            <h2 id="security-and-data-handling">Security and Data Handling</h2>
+            <p>Tenant/domain isolation is represented only via facet tags; the repository provides no row-level access controls.</p>
+            <p>PII redaction is not performed automatically. Any sensitive data should be scrubbed before ingestion or handled via downstream policies.</p>
+            <p>Secrets (e.g., Hugging Face tokens) are loaded from environment variables; there is no vault integration.</p>
+            <div class="callout">
+                <h2 id="open-gaps-and-next-steps">Open Gaps and Next Steps</h2>
+                <p>Automated chunking, tombstoning, and schema validation are not implemented; adopters should extend the ingest service if required.</p>
+                <p>There is no retry/DLQ pipeline for failed ingests—integrating a queue or workflow engine remains an exercise for production deployments.</p>
+                <p>HTML/PDF parsing, language detection, and multilingual embeddings are out of scope for the current scaffold.</p>
+                <p>Long-term retention policies for PVDB snapshots or freshness probes are undefined.</p>
+                <p>Provenance provenance beyond URI (e.g., signed sources, checksums) is not tracked; teams that need stronger guarantees should augment the metadata model.</p>
+            </div>
+        </article>
+
+        <article id="part-4" class="part">
+            <h1>Part 4 – Retrieval, Ranking, and Context Assembly</h1>
+            <h2 id="objectives-and-scope-4">Objectives and Scope</h2>
+            <p>This part describes how ChronoRAG turns a routed query into ranked evidence ready for generation. The behaviour is implemented primarily in <code>app/services/retrieve_service.py</code>, supported by <code>core/router</code>, <code>storage/pvdb</code>, <code>core/retrieval</code>, and <code>app/utils</code>. The focus is on deterministic, explainable scoring rather than multi-hop graph traversal or external search.</p>
+            <h2 id="query-handling-and-normalisation">Query Handling and Normalisation</h2>
+            <p>TemporalRouter.route() (invoked by both API and CLI) inspects the raw query, optional time_hint, and policy defaults to choose the time axis (valid vs transaction), mode (INTELLIGENT vs HARD), domain, and actual TimeWindow.</p>
+            <p>Intent detection (<code>core/gsm/intent.py</code>) provides lightweight domain heuristics (world-economy, roles, finance, generic) that influence retrieval weights.</p>
+            <p>Hints are normalised via <code>core/gsm/tnormalize.normalize_time_hint</code>, producing UTC TimeWindow objects.</p>
+            <p>The router exposes observability fields (time_window_kind, domain) consumed later in controller stats; there is no additional rate limiting or auth logic in the repo.</p>
+            <h2 id="retrieval-strategy">Retrieval Strategy</h2>
+            <p>retrieve_service.retrieve() draws candidates from two sources: BM25 lexical scores (<code>core/retrieval/lexical_bm25.py</code>) over all stored chunks and ANN cosine similarity via PVDB.ann_search.</p>
+            <p>_hybrid_ks determines fan-out sizes. For world-economy queries it pulls 150 lexical + 150 vector candidates with a rerank cap of 60; other domains use max(requested*2, 10) with a cap of 30. Domain presets: world-economy → (lexical_k=150, vector_k=150, rerank_limit=60); other domains → (lexical_k=max(top_k*2, 10), vector_k=max(top_k*2, 10), rerank_limit=min(max(top_k*2, 10), 30)) (src: <code>app/services/retrieve_service.py</code>).</p>
+            <p>PVDB’s temporal_filter applies either HARD masking (drop zero-overlap chunks) or INTELLIGENT weighting (decay with temporal distance) depending on the chosen mode.</p>
+            <p>The system does not traverse graphs or call external services—retrieval operates entirely on the local PVDB snapshot.</p>
+            <h2 id="ranking-scoring-and-diversity">Ranking, Scoring, and Diversity</h2>
+            <p>Candidates carry lexical and vector scores which are preserved for fusion.</p>
+            <p>The cross-encoder reranker (<code>core/retrieval/reranker_ce.CEReranker</code>) offers batched scoring when full models are loaded; light mode substitutes deterministic token-overlap heuristics.</p>
+            <p>Optional judge reranking (<code>core/retrieval/reranker_llm.LLMJudgeReranker</code>) averages in additional scores only when <code>config/models.yaml</code> sets llm.judge.enabled=true and light mode is disabled.</p>
+            <p>Temporal weights returned by temporal_filter, authority scores from ingestion, cross-encoder ranks, unit bias (_units_bias), age penalty, and transaction mismatch penalty feed into <code>app/utils/fusion.monotone_temporal_fusion</code>. Coefficients come from the active policy set.</p>
+            <p>_apply_region_diversity softly decreases final scores when multiple top candidates come from the same region tag (derived from entity labels or facets). _units_bias rewards passages that expose numeric unit tags (e.g., intl_1990_usd, percent) to keep quantitative evidence prominent, and _age_penalty reduces scores as a candidate’s window drifts away from the query interval (src: <code>app/services/retrieve_service.py</code>).</p>
+            <p>The final ranked list is truncated to the requested top_k (default 5) while metadata retains pre-limit counts for observability.</p>
+            <h2 id="filtering-constraints-and-modes">Filtering, Constraints, and Modes</h2>
+            <p>INTELLIGENT mode keeps near-miss passages by decaying their weights as the temporal gap grows (intelligent_decay). This helps when exact dates are sparse.</p>
+            <p>HARD mode performs strict overlap checks (hard_mode_pre_mask) and drops any passage whose valid window does not intersect the query window.</p>
+            <p>Axis selection (valid vs transaction) affects judge prompts and downstream controller stats but does not change PVDB storage—it remains the caller’s responsibility to ingest both windows.</p>
+            <p>Authority ladders defined in <code>config/polar.yaml</code> influence fusion weighting, ensuring filings/regulators outrank lower-trust sources.</p>
+            <p>Units bias nudges passages that expose numeric units required by downstream prompt templates (e.g., 1990 international dollars).</p>
+            <h2 id="context-assembly-and-outputs">Context Assembly and Outputs</h2>
+            <p>Each retrieval call returns a dictionary with:</p>
+            <ul>
+                <li>query – the original query string.</li>
+                <li>domain – inferred domain from intent detection (e.g., world-economy, roles).</li>
+                <li>results – a list of chunk dictionaries containing text, URI, valid window, authority, lexical/vector/rerank/final scores, facets, entities, units, region, and temporal weight.</li>
+                <li>metadata – fan-out counts, temporal hit count, rerank candidate counts, final result count, coverage fraction, hop count (currently always 1), and fusion weight configuration.</li>
+            </ul>
+            <p>answer_service converts these into ChronoPassage objects before running ChronoReducer and ChronoSanity, but the retrieval layer itself remains stateless.</p>
+            <h2 id="observability-and-controller-integration">Observability and Controller Integration</h2>
+            <p>Coverage fraction (metadata.coverage_fraction) is computed as pre_limit_candidate_count / rerank_limit and passed to <code>core/dhqc/controller.DHQCController</code> to decide whether additional hops were warranted.</p>
+            <p>Controller stats ultimately report hops_used, planned hops, coverage, authority, and latency (measured around the retrieval call).</p>
+            <p>No metrics exporter is included, but the returned metadata is designed for logging or tracing by downstream toolchains.</p>
+            <h2 id="failure-modes-and-fallbacks">Failure Modes and Fallbacks</h2>
+            <p>If embeddings are unavailable (light mode or model load failure) the ANN index falls back to hash-based vectors, still enabling deterministic retrieval.</p>
+            <p>If BM25 is missing, lexical retrieval degenerates to set overlap scoring, ensuring the pipeline remains functional.</p>
+            <p>LLM judge reranking is optional; when disabled or failing it simply contributes zero additional scores.</p>
+            <p>Temporal filtering defaults to INTELLIGENT if the requested mode is missing or invalid, preventing empty result sets for broad queries.</p>
+            <p>There is no retry/timeout logic inside retrieve_service; callers control retries at higher layers if needed.</p>
+            <h2 id="security-and-privacy-considerations">Security and Privacy Considerations</h2>
+            <p>Retrieval respects whatever facet filtering upstream components apply, but the repository does not enforce tenant isolation or ACLs.</p>
+            <p>No PII scrubbing occurs during retrieval; any sensitive data must have been sanitised during ingestion.</p>
+            <p>Requests are processed in-memory; no external network calls are made during retrieval, reducing attack surface but also limiting data sources.</p>
+            <div class="callout">
+                <h2 id="gaps-and-potential-extensions">Gaps and Potential Extensions</h2>
+                <p>Multi-hop retrieval is planned by the DHQC controller but currently limited to a single hop; additional iterations would need to loop retrieve() with new signals.</p>
+                <p>Graph-based expansion (<code>storage/graph</code>) is stubbed out—integrating Neo4j or similar would require custom client adapters.</p>
+                <p>There is no cache layer for retrieval results; teams wanting warm caches must implement their own keying strategy on top of the API/CLI.</p>
+                <p>Diversity beyond geographic tags (e.g., by source or entity) is not implemented.</p>
+                <p>Timeout, retry, and circuit-breaker policies are absent and should be added when deploying under load.</p>
+            </div>
+        </article>
+
+        <article id="part-5" class="part">
+            <h1>Part 5 – Generation Pipeline and Prompting Strategy</h1>
+            <h2 id="objectives-and-scope-5">Objectives and Scope</h2>
+            <p>The generation stack accepts reduced evidence from answer_service, builds deterministic prompts, selects an available LLM backend, and enforces a structured JSON answer contract. This section reflects the behaviour in <code>core/generator/generate.py</code>, <code>core/generator/prompts.py</code>, <code>core/generator/llm_loader.py</code>, and supporting utilities.</p>
+            <h2 id="generation-inputs-and-preconditions">Generation Inputs and Preconditions</h2>
+            <p>answer_service.answer() calls generate_answer only after retrieval succeeds and ChronoSanity either finds no blocking conflicts or the request is allowed to proceed.</p>
+            <p>Inputs include the raw query, resolved mode and axis, the TimeWindow chosen by TemporalRouter, the reduced evidence list (ChronoPassage objects), models_cfg (<code>config/models.yaml</code>), inferred domain, and window_kind.</p>
+            <p>When ChronoSanity detects high-overlap conflicts and the domain is not world-economy, generation is skipped entirely and an evidence-only attribution card is returned.</p>
+            <p>Evidence is already sorted by fusion score and trimmed to the configured max_passages (default 16) before prompt construction.</p>
+            <h2 id="prompt-construction">Prompt Construction</h2>
+            <p><code>core/generator/prompts.BASE_SYSTEM_PROMPT</code> anchors every request: “You are ChronoRAG Answerer (PRO)...”. Domain-specific notes currently exist for world-economy, instructing the model to cite benchmark years and units.</p>
+            <p>build_user_prompt formats a single user message containing mode, axis, window bounds, domain, window kind, the natural-language question, and a ranked evidence list. Each entry includes score, valid window, truncated text (default 180 characters), URI, units, entities, and region.</p>
+            <p>build_messages returns a [system, user] pair. No assistant/developer roles or multi-turn history are maintained; every request is stateless. The generator truncates at the stop marker &lt;|ATTR_CARD|&gt;, which separates the narrative answer from the attribution payload (src: <code>core/generator/generate.py</code>).</p>
+            <h2 id="backend-selection-and-invocation">Backend Selection and Invocation</h2>
+            <p>load_backend iterates through the configured strategy_order. Supported backends include local Hugging Face models (LocalHFBackend), OpenAI-compatible HTTP endpoints, llama.cpp GGUF models, and Ollama.</p>
+            <p>Environment variables control availability: e.g., LLM_ENDPOINT/LLM_API_KEY for OpenAI-compatible, and the filesystem for local or llama.cpp models.</p>
+            <p>When no backend can be initialised, generate_answer raises, triggering the evidence-only fallback described below.</p>
+            <p>Temperature and token budgets are read from the chosen backend’s configuration (max_new_tokens for local HF, max_tokens for OpenAI-compatible, etc.). The default temperature is 0.0 for deterministic output.</p>
+            <h2 id="evidence-selection-and-ordering">Evidence Selection and Ordering</h2>
+            <p>Evidence passed to the generator is limited to max_passages (default 16). If the config sets a lower number, only that many highest-scoring passages are used.</p>
+            <p>Snippet length defaults to 180 characters but can shrink to 100 during retry attempts to reduce prompt size.</p>
+            <p>No additional deduplication occurs inside the generator; ChronoReducer already merged overlapping passages upstream.</p>
+            <h2 id="output-schema-and-validation">Output Schema and Validation</h2>
+            <p>Responses must be minified JSON with the schema { "range": {"low", "high", "most_likely", "unit"}, "bullets": [ {"summary", "source"}, {"summary", "source"} ] }.</p>
+            <p>_validate_payload enforces numeric ranges (low ≤ most_likely ≤ high within [10, 20000]), requires the unit string to reference 1990 international dollars, and ensures exactly two bullet entries.</p>
+            <p>Bullet summaries must include a year in the 1800–1913 window (per regex) and stay within 20 words.</p>
+            <p>Any validation failure (including malformed JSON) results in a retry with tighter evidence/snippet limits; persistent failure triggers the fallback path. The current JSON schema is tuned for world-economy numeric outputs; extending to other domains means updating _validate_payload with alternate unit ranges or bullet rules (src: <code>core/generator/generate.py</code>).</p>
+            <h2 id="fallbacks-and-retries">Fallbacks and Retries</h2>
+            <p>generate_answer attempts up to two generations: the primary attempt with the full evidence set and, if necessary, a retry using at most eight passages and shorter snippets.</p>
+            <p>If all attempts fail or the backend is unreachable, _fallback_response produces a deterministic evidence digest headed by “ChronoGuard fallback mode…”, ending with the &lt;|ATTR_CARD|&gt; stop marker so downstream parsing remains consistent.</p>
+            <p>The returned tuple is (answer_text, tokens_out) where tokens_out records the last successful model token count (0 when only the fallback digest is emitted).</p>
+            <h2 id="post-processing-and-attribution">Post-processing and Attribution</h2>
+            <p>answer_service attaches controller stats, confidence metadata, and counterfactual timelines (when conflicts were detected but not blocking).</p>
+            <p><code>app/utils/cards.build_attribution_card</code> serialises sources (URI, quote, interval, score), the resolved window, temporal confidence label, and optional counterfactuals.</p>
+            <p>Alternative windows (when supporting evidence sits outside the requested interval) are surfaced through _alternative_windows to guide the user.</p>
+            <p>Detector outcomes such as ChronoSanITY_WARN or HOP_SHORTFALL are recorded in controller_stats.degraded.</p>
+            <h2 id="configuration-levers">Configuration Levers</h2>
+            <p><code>config/models.yaml.llm</code> defines strategy order, prompt limits (max_passages, snippet_chars), backend-specific stop tokens, max token budgets, and temperatures.</p>
+            <p>Setting CHRONORAG_LIGHT=1 does not short-circuit generation but typically coexists with stub embeddings/rerankers; full-fidelity answers require CHRONORAG_LIGHT=0 plus accessible model checkpoints.</p>
+            <p>Additional backend sections (llama_cpp, ollama) can be activated by editing the config and ensuring the binaries/models are installed.</p>
+            <h2 id="safety-and-determinism">Safety and Determinism</h2>
+            <p>Low temperatures and strict validation keep answers reproducible across runs.</p>
+            <p>The generator never streams partial output; responses are returned only after validation or fallback.</p>
+            <p>Counterfactual timelines originate from ChronoReducer rather than model speculation, keeping explanations audit-friendly.</p>
+            <p>No toxicity or PII filters ship with the repo—deployments that require them must wrap the generator.</p>
+            <div class="callout">
+                <h2 id="known-gaps-5">Known Gaps</h2>
+                <p>The JSON schema is tailored to world-economy numeric questions; extending it to narrative answers or other units will require code changes in _validate_payload.</p>
+                <p>There is no caching layer for generated answers or attribution cards; repeated queries run the pipeline from scratch.</p>
+                <p>Error handling stops after a single retry; more robust backoff strategies are left to downstream integrations.</p>
+                <p>Multi-lingual prompts, stylistic variations, or user-specific tone controls are not implemented.</p>
+                <p>Safety filters, human-in-the-loop review, and streaming APIs are beyond the scope of this scaffold.</p>
+            </div>
+        </article>
+
+        <article id="part-6" class="part">
+            <h1>Part 6 – APIs, Services, and Interfaces</h1>
+            <h2 id="objectives-and-scope-6">Objectives and Scope</h2>
+            <p>ChronoRAG exposes a compact FastAPI surface plus a mirrored CLI. This section documents the real routes defined in <code>app/routes</code>, their request/response models under <code>app/schemas</code>, and the shared services wired through <code>app/deps.py</code>. Functionality that is not present—such as built-in auth, rate limiting, or background workers—is highlighted so adopters can plan extensions.</p>
+            <h2 id="interface-inventory">Interface Inventory</h2>
+            <p>REST endpoints: /healthz, /ingest, /retrieve, /answer, /policy, /policy/apply, /incident.</p>
+            <p>CLI: <code>cli/chronorag_cli.py</code> provides ingest, retrieve, answer, and purge subcommands that call the same services as the HTTP layer.</p>
+            <p>Shared dependencies: <code>app/deps.get_app_state()</code> initialises PVDB, cache, router, controller, and reranker singletons shared by both API and CLI.</p>
+            <p>No background workers: Freshness hooks simply write cache keys; nothing in the repository processes them asynchronously.</p>
+            <h2 id="endpoint-catalogue">Endpoint Catalogue</h2>
+            <p>GET /healthz – Returns { "status": "ok" }; used for readiness probes.</p>
+            <p>POST /ingest – Payload: IngestRequest { paths?: List[str], text_blobs?: List[str], provenance?: str }. Response: IngestResponse { ingested: int, documents: List[str] }.</p>
+            <p>POST /retrieve – Payload: RetrieveRequest { query: str, top_k?: int, time_axis?: TimeAxis, time_mode?: TimeMode, time_hint?: dict }. Response: RetrieveResponse { query: str, results: list }.</p>
+            <p>POST /answer – Payload: AnswerRequest { query: str, time_mode?: TimeMode, time_axis?: TimeAxis, time_hint?: dict, constraints?: dict, retrieval?: dict, audit_mode?: bool }. Response: AnswerResponse with answer text (JSON string or empty), attribution card, controller stats, audit trail, and evidence_only/reason fields.</p>
+            <p>GET /docs (FastAPI auto-generated) – Serves the OpenAPI specification and interactive explorer for the live routes (src: <code>app/main.py</code>).</p>
+            <p>GET /policy – Returns the currently loaded policy bundle (merged with its active policy_version).</p>
+            <p>POST /policy/apply – Requires Authorization: Bearer chronorag-admin. Accepts PolicyApplyRequest { policy_version: str, changes: dict, idempotency_key?: str }. Responds with PolicyApplyResponse { policy_version, previous_version, accepted }.</p>
+            <p>POST /incident – Echoes { "status": "received", "payload": &lt;original&gt; }; simple echo stub for future incident intake.</p>
+            <h2 id="request-and-response-behaviour">Request and Response Behaviour</h2>
+            <p>All endpoints consume and emit JSON. Validation errors produce FastAPI-standard 422 responses.</p>
+            <p>Retrieval/answer responses include nested Python primitives (dicts/lists) rather than rigid schemas to keep experimentation lightweight. The ControllerStats Pydantic model covers the core fields, and the live service also appends retrieval_weights and router_metrics sourced from the retrieval plan; clients should expect these extras (src: <code>app/schemas/answer.py</code>; <code>app/services/answer_service.py</code>).</p>
+            <p>Attribution cards and controller stats are fully specified in <code>app/schemas/answer.py</code>; they carry enough metadata for downstream logging or UI rendering.</p>
+            <h2 id="authentication-and-access-control">Authentication and Access Control</h2>
+            <p>/policy/apply enforces a static bearer token; all other endpoints are unauthenticated in the repository. Deployments should add middleware or run behind an API gateway.</p>
+            <p>Tenancy fields exist in facets but are not enforced at the service layer.</p>
+            <h2 id="cli-usage">CLI Usage</h2>
+            <p><code>python -m cli.chronorag_cli ingest data/sample/docs/aihistory1.txt</code></p>
+            <p><code>python -m cli.chronorag_cli retrieve --query "Europe GDP per capita in 1870"</code></p>
+            <p><code>python -m cli.chronorag_cli answer --query "Who led ChronoCorp in 1999?"</code></p>
+            <p><code>python -m cli.chronorag_cli purge</code></p>
+            <p>CLI commands share PVDB/cache state with the API because they rely on the same dependency providers. Running purge resets that shared state.</p>
+            <h2 id="error-handling-idempotency-and-retries">Error Handling, Idempotency, and Retries</h2>
+            <p>Errors bubble up as default FastAPI responses (e.g., 422 for validation failures, 500 for uncaught exceptions). There are no custom error codes.</p>
+            <p>/policy/apply respects idempotency_key to avoid duplicate policy updates. Ingestion, retrieval, and answer endpoints do not implement idempotency.</p>
+            <p>No rate limiting, backoff, or retry loops are built in; clients are expected to implement their own strategies.</p>
+            <p>answer_service returns evidence-only payloads rather than raising when generation cannot complete, keeping HTTP responses successful.</p>
+            <h2 id="state-management">State Management</h2>
+            <p>PVDB and caches live in-process. Scaling Uvicorn beyond a single worker or running multiple CLI/API processes requires replacing PVDB with an external service to keep data consistent.</p>
+            <p>maintenance_service.purge_system() (exposed only via CLI) clears PVDB, ANN vectors, cache entries, and policy idempotency state.</p>
+            <h2 id="observability-outputs">Observability Outputs</h2>
+            <p>/answer responses include controller stats (hop plan, coverage, latency, token counts, degradation codes) and audit trails (ChronoSanity conflicts) for external logging.</p>
+            <p>The repository does not configure OTEL, metrics, or structured logging; integrators must add instrumentation as needed.</p>
+            <div class="callout">
+                <h2 id="known-gaps-6">Known Gaps</h2>
+                <p>Authentication, authorisation, quota enforcement, and audit logging must be layered on externally.</p>
+                <p>/incident is a stub and performs no storage or alerting.</p>
+                <p>There is no OpenAPI customisation, SDK generation, or documentation site beyond FastAPI’s autogenerated docs.</p>
+                <p>Streaming responses, asynchronous jobs, and multi-tenant isolation are not implemented.</p>
+                <p>Purge/reset functionality is CLI-only; administrators may wish to expose a secured management endpoint.</p>
+            </div>
+        </article>
+
+        <article id="part-7" class="part">
+            <h1>Part 7 – Policy, Configuration, and Governance</h1>
+            <h2 id="objectives-and-scope-7">Objectives and Scope</h2>
+            <p>ChronoRAG’s behaviour is steered by YAML policy bundles, axis rules, model settings, and a small amount of tenant metadata. This part summarizes the configuration files shipped in the repository, how they are loaded into the application, and the governance mechanisms (or lack thereof) that control updates at runtime.</p>
+            <h2 id="policy-stack-overview">Policy Stack Overview</h2>
+            <p><code>config/polar.yaml</code> (POLAR) – Defines policy sets per domain (e.g., generic, world-economy) covering time-axis defaults, authority ladders, retrieval weight coefficients, DHQC parameters, cache TTLs, ChronoSanity thresholds, and freshness triggers.</p>
+            <p><code>config/axis_policy.yaml</code> – Specifies valid axes, snap rules for forcing HARD mode, fuzzy period windows (e.g., “post-war”), and padding for explicit year/century queries.</p>
+            <p><code>config/models.yaml</code> – Controls embeddings, cross-encoder reranker, optional LLM judge settings, LLM strategy order, prompt limits, temperatures, and backend-specific stop tokens.</p>
+            <p>Policy bundle version: the shipped <code>config/polar.yaml</code> advertises policy_version: v1.2.0, which callers can retrieve through /policy (src: <code>config/polar.yaml</code>).</p>
+            <p>Authority ladder example: the generic policy orders sources as filing → regulator → official_site → reliable_press → blog, influencing final fusion scores (src: <code>config/polar.yaml</code>).</p>
+            <p>All four files are loaded in <code>app/deps.get_app_state()</code> and cached for reuse. Updates require restarting the process or using /policy/apply where supported.</p>
+            <h2 id="runtime-configuration-flow">Runtime Configuration Flow</h2>
+            <p>On startup, get_app_state() loads the YAML files, initialises PVDB, cache, router, controller, and reranker, and stores them in a singleton AppState.</p>
+            <p>/policy/apply merges incoming changes into the in-memory policy bundle (no disk persistence) and updates the recorded policy_version.</p>
+            <p>policy_service enforces a static admin token (Bearer chronorag-admin) and optional idempotency_key to avoid applying the same patch twice.</p>
+            <p>Clients can retrieve the current policy by calling GET /policy, which reflects any in-memory modifications.</p>
+            <p>Model configuration changes (<code>config/models.yaml</code>) are not hot-reloadable; they require process restart so that <code>app/deps</code> can rebuild the reranker/LLM objects.</p>
+            <h2 id="chronoguard-controls">ChronoGuard Controls</h2>
+            <p>DHQC parameters (polar.yaml.dhqc): tau, delta, n_max, n_hard, and fanout_cap_total drive hop planning (see Part 4).</p>
+            <p>Cache TTLs (polar.yaml.caches): control freshness of cached responses (leadership minutes vs generic hours).</p>
+            <p>ChronoSanity (polar.yaml.chronosanity): overlap threshold (0.6 by default) and evidence-only reason code.</p>
+            <p>Freshness triggers (polar.yaml.freshness): list of substrings that, when found in a URI, write probe entries to the cache for external monitoring.</p>
+            <p>Authority ladder (polar.yaml.policy_sets.*.authority_ladder): rank order used during monotone fusion.</p>
+            <p>Axis defaults (polar.yaml.policy_sets.*.time_axis_default/time_mode_default): consumed by TemporalRouter.</p>
+            <p>Axis snap rules (<code>axis_policy.yaml.snap_rules</code>): thresholds for switching INTELLIGENT → HARD based on contradiction or low-confidence signals (currently unused because live signals are not wired in).</p>
+            <h2 id="environment-variables-and-secrets">Environment Variables and Secrets</h2>
+            <p>CHRONORAG_LIGHT toggles light mode (stub models) vs full model loading.</p>
+            <p>HF_TOKEN, LLM_ENDPOINT, LLM_API_KEY, and optional llama.cpp/Ollama variables feed the generator backends.</p>
+            <p>REDIS_URL enables external caching; absence falls back to in-process storage.</p>
+            <p>TOKENIZERS_PARALLELISM, HF_HUB_DISABLE_PROGRESS_BARS, and other quality-of-life flags are set in <code>app/deps</code>.</p>
+            <p>No secret management integration ships with the repository; environment variables must be provided by the host environment.</p>
+            <h2 id="governance-practices">Governance Practices</h2>
+            <p>Policy updates are in-memory only; there is no audit log beyond process stdout or external logging added by the operator.</p>
+            <p>Versioning relies on client discipline to bump policy_version when applying changes; the repository does not enforce semantic versioning.</p>
+            <p>Because PVDB and policies are process-local, running multiple API instances requires an external coordination mechanism to keep policies in sync (e.g., reloading on each instance or persisting policies to shared storage).</p>
+            <p>There is no schema validation for policy payloads beyond standard YAML structure; malformed updates may leave the app in a partially configured state.</p>
+            <div class="callout">
+                <h2 id="known-gaps-7">Known Gaps</h2>
+                <p>Policy changes are not persisted; restarts revert to the bundled YAML files unless operators manage snapshots externally.</p>
+                <p>There is no RBAC or multi-tenant guardrail around /policy/apply; the single admin token applies cluster-wide.</p>
+                <p>Axis snap rules reference live signals (contradiction, low_confidence) that are not currently produced by the system.</p>
+                <p>Freshness probes write cache keys but no worker consumes them; integrating a job runner is left to adopters.</p>
+                <p>Model configuration hot-reload, validation, and rollback tooling are absent.</p>
+            </div>
+        </article>
+
+        <article id="part-8" class="part">
+            <h1>Part 8 – Observability, QA, and Performance</h1>
+            <h2 id="objectives-and-scope-8">Objectives and Scope</h2>
+            <p>This part summarises the instrumentation, testing, and performance tooling that actually ship with the ChronoRAG repository. The implementation leans on lightweight diagnostics (controller stats, audit trails) and a pytest suite; there is no bundled metrics stack or external observability service.</p>
+            <h2 id="built-in-observability-surfaces">Built-in Observability Surfaces</h2>
+            <p>/answer responses expose controller_stats capturing hop plans, coverage, latency (ms), cost (USD estimate), token counts, degradation flags, rerank method, retrieval weights, and router metrics.</p>
+            <p>Audit trails record ChronoSanity conflicts when overlapping evidence is detected (<code>app/services/answer_service.py</code>).</p>
+            <p>Attribution cards list every cited source with score, interval, and quote (<code>app/utils/cards.py</code>), providing a traceable map between answers and evidence.</p>
+            <p>The generator logs validation failures via Python’s standard logging (<code>core/generator/generate.py</code>), but no log configuration is provided beyond the default logger.</p>
+            <p>Cache freshness probes write simple JSON entries into the optional Redis cache (ingest_service._apply_freshness_policy), which can be inspected externally.</p>
+            <p><code>checkllm.sh</code> exercises the configured LLM backend and prints a short sample, offering a quick operational smoke test.</p>
+            <h2 id="testing-and-qa-artefacts">Testing and QA Artefacts</h2>
+            <p>The pytest suite (<code>tests/</code>) includes unit tests for core utilities (<code>test_time_windows.py</code>, <code>test_fusion_monotone.py</code>, <code>test_router_axis_mode.py</code>, <code>test_dhqc_caps.py</code>, <code>test_maintenance.py</code>) and end-to-end scenarios (<code>tests/e2e/test_ingest_retrieve.py</code>, <code>tests/e2e/test_answer_card.py</code>).</p>
+            <p>Sample documents under <code>data/sample/docs/</code> and fixtures such as <code>tests/fixtures/tiny_docs.jsonl</code> support repeatable ingest/retrieve tests.</p>
+            <p>Makefile exposes <code>make test</code> (runs pytest -q) for convenience.</p>
+            <p>No formal regression decks, red-team harnesses, or automated QA dashboards are bundled; teams should extend the pytest suite for additional coverage.</p>
+            <h2 id="test-coverage-snapshot">Test coverage snapshot</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Test</th>
+                        <th>Focus</th>
+                        <th>Source</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>tests/e2e/test_ingest_retrieve.py::test_retrieve_world_economy_units_and_facets</code></td>
+                        <td>Validates ingest → retrieval facets and unit tagging</td>
+                        <td>(src: <code>tests/e2e/test_ingest_retrieve.py</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>tests/e2e/test_answer_card.py::test_answer_returns_world_economy_timeline</code></td>
+                        <td>Confirms attribution card contents and controller stats</td>
+                        <td>(src: <code>tests/e2e/test_answer_card.py</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>tests/unit/test_time_windows.py</code></td>
+                        <td>Exercises time window parsing/intersection helpers</td>
+                        <td>(src: <code>tests/unit/test_time_windows.py</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>tests/unit/test_fusion_monotone.py</code></td>
+                        <td>Verifies monotone fusion scoring behaviour</td>
+                        <td>(src: <code>tests/unit/test_fusion_monotone.py</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>tests/unit/test_dhqc_caps.py</code></td>
+                        <td>Checks hop planning limits and degradation caps</td>
+                        <td>(src: <code>tests/unit/test_dhqc_caps.py</code>)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Run <code>pytest -q</code> (or <code>make test</code>) to execute the suite and confirm regression status (src: <code>tests/</code>; <code>Makefile</code>).</p>
+            <h2 id="performance-considerations">Performance Considerations</h2>
+            <p>CHRONORAG_LIGHT=1 swaps heavy models for deterministic stubs, enabling fast local tests and smoke checks without GPUs.</p>
+            <p>Full model mode (CHRONORAG_LIGHT=0) depends on the embeddings/reranker/LLM defined in <code>config/models.yaml</code>; throughput is bounded by hardware and the selected backend.</p>
+            <p>There are no load-testing scripts, latency dashboards, or cache hit-rate monitors in the repository. Operators can build synthetic workloads using the CLI or by scripting repeated /answer calls.</p>
+            <p>Retrieval metadata provides enough detail (fan-out counts, coverage, rerank candidate counts) to derive basic performance metrics offline.</p>
+            <h2 id="logging-and-metrics-gaps">Logging and Metrics Gaps</h2>
+            <p>No OTEL exporters, structured logging configuration, or metrics collectors are wired into the application.</p>
+            <p>There is no standard for log retention, redaction, or correlation IDs beyond what Python’s logging provides.</p>
+            <p>Alerting, SLO tracking, and dashboards must be implemented externally using the data returned in responses or custom instrumentation.</p>
+            <div class="callout">
+                <h2 id="known-gaps-8">Known Gaps</h2>
+                <p>There is no integrated telemetry pipeline; users must add logging/metrics middleware if required.</p>
+                <p>Performance benchmarking requires bespoke tooling (e.g., Locust, k6) because the repo supplies none.</p>
+                <p>Test coverage focuses on temporal logic and core services; additional scenarios (failure injection, policy reloads) remain open for contributors.</p>
+                <p>Counterfactual logging is limited to audit trails and not persisted beyond process memory unless clients capture responses.</p>
+                <p>Freshness probe entries are written to the cache but no worker processes them; monitoring freshness requires custom automation.</p>
+            </div>
+        </article>
+
+        <article id="part-9" class="part">
+            <h1>Part 9 – Security, Privacy, and Compliance</h1>
+            <h2 id="objectives-and-scope-9">Objectives and Scope</h2>
+            <p>The ChronoRAG repository is a research scaffold and ships with minimal security features. This part catalogues what is present (e.g., the policy admin token, optional Redis cache) and, more importantly, what is absent so operators can design appropriate controls before exposing the system to untrusted environments.</p>
+            <h2 id="authentication-and-authorization">Authentication and Authorization</h2>
+            <p>API endpoints (/ingest, /retrieve, /answer, /incident, /policy) do not implement authentication or rate limiting.</p>
+            <p>/policy/apply requires a hard-coded bearer token (Bearer chronorag-admin), matching ADMIN_TOKEN = "Bearer chronorag-admin" in the service and providing rudimentary admin gating but no tenant separation (src: <code>app/services/policy_service.py</code>).</p>
+            <p>There is no role-based access control, audit trail, or request signing. Any upstream protection (OAuth, API gateway, mTLS) must be provided by the deployment environment.</p>
+            <h2 id="data-handling-and-storage">Data Handling and Storage</h2>
+            <p>Ingested documents and chunks live in-memory within <code>storage/pvdb</code> and can optionally be snapshotted to <code>storage/pvdb/persisted.json</code>. No encryption at rest or access control is applied to this file.</p>
+            <p>Optional Redis caching (via REDIS_URL) does not configure TLS, authentication, or key rotation. In-memory fallback stores cache data in-process without persistence.</p>
+            <p>There is no PII redaction or anonymisation pipeline; any sensitive data should be scrubbed before ingestion.</p>
+            <p>Attribution cards and controller stats are returned directly to clients and are not stored server-side.</p>
+            <h2 id="secrets-and-configuration-management">Secrets and Configuration Management</h2>
+            <p>Secrets (Hugging Face tokens, OpenAI-compatible keys) are read from environment variables. The repository does not integrate with secret managers or rotate credentials.</p>
+            <p>Configuration patches applied through /policy/apply remain in memory only; restarts revert to the bundled YAML files.</p>
+            <p>Logs may include URIs and other metadata; there is no structured redaction beyond whatever operators add externally.</p>
+            <h2 id="compliance-considerations">Compliance Considerations</h2>
+            <p>No compliance frameworks (SOC 2, GDPR, HIPAA, etc.) are referenced or supported out of the box.</p>
+            <p>Audit logging is limited to whatever clients capture from API responses; the service does not persist access logs.</p>
+            <p>Data residency, retention, and deletion workflows are not defined. Purging PVDB via the CLI is the only built-in mechanism for clearing stored content.</p>
+            <div class="callout">
+                <h2 id="known-gaps-and-recommendations">Known Gaps and Recommendations</h2>
+                <p>Add authentication, rate limiting, and request logging before exposing the API outside a controlled environment.</p>
+                <p>Persist policies and PVDB snapshots in secured storage with proper encryption and backup routines.</p>
+                <p>Introduce audit logging, structured redaction, and monitoring for /policy/apply actions.</p>
+                <p>Use a secrets manager (e.g., AWS Secrets Manager, Hashicorp Vault) instead of plaintext environment variables in production.</p>
+                <p>Define data retention, deletion, and tenant isolation policies to satisfy organisational or regulatory requirements.</p>
+            </div>
+        </article>
+
+        <article id="part-10" class="part">
+            <h1>Part 10 – Operations, Maintenance, and Roadmap</h1>
+            <h2 id="objectives-and-scope-10">Objectives and Scope</h2>
+            <p>This part documents how to set up, run, and maintain the ChronoRAG scaffold as delivered in the repository. Because the project is a research stack, day-two operations (monitoring, backups, scaling) are intentionally simple and rely on Python tooling plus a lightweight data store.</p>
+            <h2 id="repository-layout">Repository Layout</h2>
+            <p><code>app/</code> – FastAPI application, routes, schemas, services, and utilities.</p>
+            <p><code>core/</code> – Retrieval heuristics, generator, router, and controller logic.</p>
+            <p><code>storage/</code> – PVDB persistence (<code>storage/pvdb</code>), optional cache client (<code>storage/cache</code>).</p>
+            <p><code>config/</code> – YAML configuration files (policies, axis rules, models, tenant defaults).</p>
+            <p><code>cli/</code> – Command-line entry point mirroring API functionality.</p>
+            <p><code>data/sample/</code> – Historical example documents used by tests and demos.</p>
+            <p><code>tests/</code> – Pytest suites (unit + end-to-end).</p>
+            <p><code>scripts/</code> – Helper scripts such as <code>install.sh</code>, <code>checkllm.sh</code>, <code>query.sh</code>.</p>
+            <h2 id="setup-and-installation">Setup and Installation</h2>
+            <p>Create and activate a Python 3.11 virtual environment.</p>
+            <p>Install dependencies via <code>pip install -r requirements.txt</code> (or run <code>./install.sh</code> to upgrade pip, install dependencies, and pre-download model assets).</p>
+            <p>Optionally set environment variables: CHRONORAG_LIGHT=0 to load real models, HF_TOKEN for gated Hugging Face repos, LLM_ENDPOINT/LLM_API_KEY for OpenAI-compatible backends, REDIS_URL to enable external caching.</p>
+            <p><code>howtorunme.md</code> contains cookbook instructions for macOS, WSL, and Kaggle/Colab environments.</p>
+            <h2 id="running-the-stack">Running the Stack</h2>
+            <p>API server: <code>python -m app.uvicorn_runner</code> (or <code>make run</code>). <code>make run</code> delegates to the Makefile target and launches Uvicorn on 127.0.0.1:8000 (src: <code>Makefile</code>).</p>
+            <p>CLI workflows: <code>python -m cli.chronorag_cli ingest ...</code>, retrieve, answer, and purge. Useful for batch ingest and regression tests (src: <code>cli/chronorag_cli.py</code>).</p>
+            <p>Smoke tests: <code>./checkllm.sh</code> verifies the LLM backend; <code>./query.sh</code> provides an interactive CLI prompt that routes through cli.chronorag_cli answer (src: <code>checkllm.sh</code>; <code>query.sh</code>).</p>
+            <p>Testing: <code>make test</code> runs pytest -q against unit and end-to-end suites for quick regression feedback (src: <code>Makefile</code>).</p>
+            <p>Sample run: ingest the sample docs (<code>data/sample/docs/*.txt</code>) and issue an answer query to inspect attribution cards and controller stats.</p>
+            <h2 id="state-and-maintenance">State and Maintenance</h2>
+            <p>PVDB stores data in memory and can snapshot to <code>storage/pvdb/persisted.json</code>. Removing or backing up this file controls persistence between runs.</p>
+            <p>Use <code>python -m cli.chronorag_cli purge</code> to clear PVDB, ANN vectors, cache entries, and policy idempotency keys.</p>
+            <p>Cache state defaults to in-process storage; if REDIS_URL is set, manage Redis lifecycle externally (flush or expire keys as needed).</p>
+            <p>Policy updates issued via /policy/apply or future tooling survive only for the process lifetime; capture desired changes back into the YAML files before redeploying.</p>
+            <p>Model assets downloaded by <code>install.sh</code> live under <code>models_bin/</code>; prune or relocate them when reclaiming disk space.</p>
+            <h2 id="deployment-considerations">Deployment Considerations</h2>
+            <p>The application is single-process. Running multiple Uvicorn workers or replicas requires replacing PVDB with an external data store (e.g., Postgres + pgvector) and coordinating policy state across instances.</p>
+            <p>No container, CI/CD, or infrastructure manifests are provided. Teams typically wrap the app in their own Dockerfile and deployment pipeline.</p>
+            <p>Observability, security, and scaling controls are minimal (see Parts 8 and 9); plan to integrate authentication, metrics, and logging middleware before production use.</p>
+            <p>GPU usage is optional and only needed when loading full models; in light mode the stack runs comfortably on CPU-only machines.</p>
+            <h2 id="roadmap-ideas-for-operators">Roadmap Ideas for Operators</h2>
+            <p>Persist PVDB to an external database and build automated backup/restore scripts.</p>
+            <p>Add authentication and rate limiting at the API gateway or application layer.</p>
+            <p>Instrument metrics/tracing and automate regression testing in CI.</p>
+            <p>Expand the CLI into an operational toolbox (policy diff/apply, cache inspection, snapshot management).</p>
+        </article>
+
+        <section id="glossary">
+            <h1>Glossary</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Term</th>
+                        <th>Definition</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>TimeWindow</td>
+                        <td>Closed-open interval object that stores start/end timestamps and overlap logic (<code>app/utils/time_windows.py</code>).</td>
+                    </tr>
+                    <tr>
+                        <td>PVDB</td>
+                        <td>Lightweight vector store that keeps documents, chunks, embeddings, and lineage in memory with JSON snapshots (<code>storage/pvdb/dao.py</code>).</td>
+                    </tr>
+                    <tr>
+                        <td>TemporalRouter</td>
+                        <td>Policy-driven resolver that chooses axis, mode, domain, and query window before retrieval (<code>core/router/temporal_router.py</code>).</td>
+                    </tr>
+                    <tr>
+                        <td>DHQCController</td>
+                        <td>Hop planner that determines retrieval passes based on coverage signals (<code>core/dhqc/controller.py</code>).</td>
+                    </tr>
+                    <tr>
+                        <td>ChronoPassage</td>
+                        <td>Normalised passage wrapper used for reduction, conflict checks, and attribution (<code>app/utils/chrono_reducer.py</code>).</td>
+                    </tr>
+                    <tr>
+                        <td>ChronoSanity</td>
+                        <td>Policy-governed overlap detection that can emit evidence-only responses when passages contradict each other.</td>
+                    </tr>
+                    <tr>
+                        <td>Attribution Card</td>
+                        <td>Response payload listing sources, intervals, confidence, and optional counterfactuals (<code>app/utils/cards.py</code>).</td>
+                    </tr>
+                    <tr>
+                        <td>Light mode</td>
+                        <td>Environment flag that swaps heavy models for deterministic stubs during tests (<code>app/light_mode.py</code>).</td>
+                    </tr>
+                    <tr>
+                        <td>Authority ladder</td>
+                        <td>Ordered source preference configured per domain inside <code>config/polar.yaml</code>.</td>
+                    </tr>
+                    <tr>
+                        <td>Controller stats</td>
+                        <td>Diagnostics emitted with answers that record hops, coverage, latency, and degradation reasons (<code>app/services/answer_service.py</code>).</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="evidence-index">
+            <h1>Evidence Index</h1>
+            <ul>
+                <li><code>howtorunme.md</code></li>
+                <li><code>config/polar.yaml</code></li>
+                <li><code>app/main.py</code></li>
+                <li><code>app/deps.py</code></li>
+                <li><code>app/services/</code></li>
+                <li><code>core/retrieval/</code></li>
+                <li><code>core/dhqc/controller.py</code></li>
+                <li><code>core/router/temporal_router.py</code></li>
+                <li><code>core/generator/</code></li>
+                <li><code>storage/pvdb/dao.py</code></li>
+                <li><code>storage/cache/redis_client.py</code></li>
+                <li><code>storage/graph/neo4j_client.py</code></li>
+                <li><code>config/axis_policy.yaml</code></li>
+                <li><code>config/models.yaml</code></li>
+                <li><code>config/tenants/default.yaml</code></li>
+                <li><code>cli/chronorag_cli.py</code></li>
+                <li><code>install.sh</code></li>
+                <li><code>checkllm.sh</code></li>
+                <li><code>query.sh</code></li>
+                <li><code>tests/unit/</code></li>
+                <li><code>tests/e2e/</code></li>
+                <li><code>app/services/ingest_service.py</code></li>
+                <li><code>app/services/retrieve_service.py</code></li>
+                <li><code>app/schemas/answer.py</code></li>
+                <li><code>app/services/answer_service.py</code></li>
+            </ul>
+        </section>
+
+        <section id="consistency-checklist">
+            <h1>Consistency Checklist</h1>
+            <ul>
+                <li>All new technical details include explicit (src: …) pointers.</li>
+                <li>Part 6 clarifies the ControllerStats schema versus runtime extras.</li>
+                <li>Section titles and numbering remain unchanged across all 10 parts.</li>
+                <li>No occurrences of 'TBD' or 'placeholder' remain in the document.</li>
+                <li>Shared terms (PVDB, TemporalRouter, retrieval weights) are used consistently across parts.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        © SSKG | Page <span class="page-number"></span> of <span class="total-pages"></span>
+    </footer>
+
+    <script>
+        // Simple print footer pagination
+        if (window.matchMedia('print').matches) {
+            let pageNum = 1;
+            document.querySelectorAll('.part').forEach((part, index) => {
+                if (index > 0) pageNum++;
+                const footer = part.querySelector('footer') || document.querySelector('footer').cloneNode(true);
+                footer.querySelector('.page-number').textContent = pageNum;
+                part.appendChild(footer);
+            });
+        }
+    </script>
+</body>
+</html>

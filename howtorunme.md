@@ -52,6 +52,9 @@ Additional tips:
 - Accept the Hugging Face license for Phi-3 Mini and export `HF_TOKEN`.
 - Install `bitsandbytes` (`pip install bitsandbytes`) when using GPU-based 4-bit loading.
 - Persist `models_bin` to `/kaggle/working` or Google Drive if you need reuse across sessions.
+- CLI/API responses now return minified JSON objects with `range` + 2 `bullets`
+  when the LLM succeeds. Parse the JSON payload directly or inspect
+  `controller_stats` to detect fallback digests.
 
 ## 3. macOS Workflow
 
@@ -80,6 +83,7 @@ python -m app.uvicorn_runner --host 0.0.0.0 --port 8000
 python -m cli.chronorag_cli answer \
   --query "Europe GDP per capita in 1870 (1990 intl$)" \
   --mode HARD --axis valid
+# The answer field will be JSON when validated; evidence digests remain plain text.
 
 # Purge ingested content when done
 python -m cli.chronorag_cli purge
@@ -117,6 +121,7 @@ python -m app.uvicorn_runner --host 0.0.0.0 --port 8000 &
 python -m cli.chronorag_cli answer \
   --query "Europe GDP per capita in 1870 (1990 intl$)" \
   --mode INTELLIGENT --axis valid
+# Structured JSON answers can be decoded with `python -m json.tool` if desired.
 
 python -m cli.chronorag_cli purge
 ```

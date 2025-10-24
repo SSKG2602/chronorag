@@ -67,6 +67,13 @@ with ChronoGuard controls gating each phase.
   Hugging Face models, 4-bit loading hints, and deterministic generation with
   stop tokens.
 
+- **Answer JSON Envelope**  
+  The generator enforces a strict JSON schema for numeric timelines and range
+  estimates: `{ "range": {low, high, most_likely, unit}, "bullets": [...] }`.
+  Validation ensures the LLM supplies plausible values, two evidence bullets
+  with year references, and 1990 international dollar units before the payload
+  is returned downstream.
+
 - `core/dhqc/*`  
   Implements the Domain Heuristic Query Controller (DHQC) for hop planning and
   candidate budgets based on coverage signals.
@@ -85,6 +92,8 @@ with ChronoGuard controls gating each phase.
   evidence-only outputs when conflicts exceed configurable thresholds.
 - **Attribution cards** embed source URIs, windows, authority scores, and
   counterfactual timelines to explain conflicting evidence.
+- **Structured validation** rejects malformed LLM output; on failure the system
+  retries with a narrower prompt and ultimately reverts to an evidence digest.
 
 ## Model Strategy
 

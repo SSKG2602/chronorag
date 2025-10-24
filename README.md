@@ -140,7 +140,4 @@ Operational setup, environment preparation, CLI workflows, and testing commands
 are documented in [`howtorunme.md`](howtorunme.md). Refer to that guide for
 platform-specific instructions (macOS, Linux, Kaggle, Colab).
 
-## License
-
-ChronoRAG inherits its licensing from the original repo. See `LICENSE` for full
-terms and attribution requirements.
+##Refer [`Documentation`](https://tinyurl.com/C-RAGdoc) for complete explanation

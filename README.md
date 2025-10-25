@@ -149,7 +149,7 @@ platform-specific instructions (macOS, Linux, Kaggle, Colab).
 - Connect in <a href="https://www.linkedin.com/in/shreyasshashi/" target="_blank">Linkdein</a>
 - Website : <a href="https://syperith.com" target="_blank">Syperith</a>
 - For bespoke AI systems or private coaching, reach me at coaching@syperith.com
-- Book a Clarity Call / AI Sprint: <a href="https://topmate.io/dashboard/home" target="_blank">Topmate</a>
+- Book a Clarity Call / AI Sprint: <a href="https://topmate.io/shreyasshashi" target="_blank">Topmate</a>
 - <a href="https://www.linkedin.com/company/coaching-syperith/" target="_blank">coaching.syperith</a>
 
 

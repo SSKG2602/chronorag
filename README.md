@@ -146,8 +146,8 @@ platform-specific instructions (macOS, Linux, Kaggle, Colab).
 
 ## Contact info :
 
-## Connect in [`linkdein`](www.linkedin.com/in/shreyasshashi)
-## Website : [`Syperith`](www.syperith.com)
-## For bespoke AI systems or private coaching, reach me at coaching@syperith.com
-## Book a Clarity Call / AI Sprint: [`Topmate`](topmate.io/shreyasshashi)
-## [`coaching.syperith`](https://www.linkedin.com/company/coaching-syperith/)
+- Connect in [`linkdein`](www.linkedin.com/in/shreyasshashi)
+- Website : [`Syperith`](www.syperith.com)
+- For bespoke AI systems or private coaching, reach me at coaching@syperith.com
+- Book a Clarity Call / AI Sprint: [`Topmate`](topmate.io/shreyasshashi)
+- [`coaching.syperith`](https://www.linkedin.com/company/coaching-syperith/)

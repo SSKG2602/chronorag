@@ -145,9 +145,11 @@ platform-specific instructions (macOS, Linux, Kaggle, Colab).
 ## [`Author : Shreyas Shashi Kumar Gowda`](www.linkedin.com/in/shreyasshashi)
 
 ## Contact info :
-
-- Connect in [`linkdein`]((https://www.linkedin.com/in/shreyasshashi/)) 
-- Website : [`Syperith`](www.syperith.com)
+```
+- Connect in <a href="https://www.linkedin.com/in/shreyasshashi/" target="_blank">Linkdein</a>
+- Website : <a href="https://syperith.com" target="_blank">Syperith</a>
 - For bespoke AI systems or private coaching, reach me at coaching@syperith.com
-- Book a Clarity Call / AI Sprint: [`Topmate`](topmate.io/shreyasshashi)
-- [`coaching.syperith`](https://www.linkedin.com/company/coaching-syperith/)
+- Book a Clarity Call / AI Sprint: <a href="https://topmate.io/dashboard/home" target="_blank">Topmate</a>
+- <a href="https://www.linkedin.com/company/coaching-syperith/" target="_blank">coaching.syperith</a>
+
+```

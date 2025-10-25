@@ -141,3 +141,8 @@ are documented in [`howtorunme.md`](howtorunme.md). Refer to that guide for
 platform-specific instructions (macOS, Linux, Kaggle, Colab).
 
 ##Refer [`Documentation`](https://tinyurl.com/C-RAGdoc) for complete explanation
+
+## `Author : Shreyas Shashi Kumar Gowda`
+
+## Contact info :
+--g--
